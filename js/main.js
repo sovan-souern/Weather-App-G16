@@ -1,12 +1,4 @@
 const btn = document.querySelector('.btn')
-// btn.addEventListener('click', () => {
-//     Swal.fire({
-//         title: "This location is not found!",
-//         icon: "error",
-//         text: "Please find other location.",
-//     });
-// });
-
 const search = document.querySelector('.form-control')
 const apiKey = '2f2a46aec436e07080c19fc46c4fc306';
 const yourlocation = document.querySelector('.your-location');
@@ -19,6 +11,73 @@ const weatherImg = document.querySelector('.img-weather');
 const condition = document.querySelector('#condition');
 console.log(weatherImg);
 
+function getLocation() {
+    // Return a Promise that resolves with the latitude and longitude
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            resolve({ latitude, longitude }); // Resolve the Promise with the coordinates
+          },
+          (error) => {
+            reject(error); // Reject the Promise if there is an error
+          }
+        );
+      } else {
+        reject(new Error("Geolocation is not supported by this browser."));
+      }
+    });
+  }
+async function getFetchDataUser(endPoint, latitude, longitude){
+    const apiUrl= `https://api.openweathermap.org/data/2.5/${endPoint}?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
+    const response = await fetch(apiUrl)
+    return response.json()
+}
+getLocation()
+  .then(({ latitude, longitude }) => {
+    console.log("Latitude:", latitude, "Longitude:", longitude);
+    return getFetchDataUser("weather", latitude, longitude); // Call getFetchData with the coordinates
+  })
+  .then((data) => {
+    console.log("Weather data:", data); // Log the fetched weather data
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
+  async function updateWeatherInfoUser(latitude, longitude){
+    const weatherData = await getFetchDataUser("weather", latitude, longitude)
+    const { 
+        name: country,
+        main: {temp, feels_like, humidity },
+        weather: [{ id, main }],
+        wind: {speed},
+
+    } = weatherData;
+    yourlocation.textContent = country;
+    temperature.textContent = Math.round(temp)+'°C';
+    feel.textContent = Math.round(feels_like)+'°C';
+    wind.textContent = speed+' m/s';
+    humiditys.textContent = humidity;
+    condition.textContent = main;
+    weatherImg.src = `images/${getWeatherIcon(id)}`;
+
+    console.log(weatherData)
+
+
+}
+async function main() {
+  try {
+    const { latitude, longitude } = await getLocation(); // Get the user's location
+    await updateWeatherInfoUser(latitude, longitude); // Update weather information
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+// Call the main function
+main();
 btn.addEventListener('click', () => {
     if(search.value.trim()!= ''){
         updateWeatherInfo(search.value)
@@ -37,6 +96,7 @@ search.addEventListener('keydown', (event) => {
 async function getFetchData(endPoint, city){
     const apiUrl= `https://api.openweathermap.org/data/2.5/${endPoint}?q=${city}&appid=${apiKey}&units=metric`
     const response = await fetch(apiUrl)
+    console.log(endPoint)
 
     return response.json()
 }
@@ -73,57 +133,45 @@ function showDate() {
 }
 showDate()
 const date = new Date()
-async function updateWeatherInfo(city){
-    const weatherData = await getFetchData("weather", city)
-    const { 
-        name: country,
-        main: { temp, feels_like, humidity },
-        weather: [{ id, main }],
-        wind: {speed},
+async function updateWeatherInfo(city) {
+    try {
+        const weatherData = await getFetchData("weather", city);
 
-    } = weatherData;
-    yourlocation.textContent = country;
-    temperature.textContent = Math.round(temp)+'°C';
-    feel.textContent = Math.round(feels_like)+'°C';
-    wind.textContent = speed+' m/s';
-    humiditys.textContent = humidity;
-    condition.textContent = main;
-    weatherImg.src = `images/${getWeatherIcon(id)}`;
-
-    console.log(weatherData)
-
-    if (weatherData.cod != 200){
-        btn.addEventListener('click', () => {
+        // Check if the response contains an error
+        if (weatherData.cod != 200) {
             Swal.fire({
-                title: "This location is not found!",
+                title: "Location not found!",
                 icon: "error",
-                text: "Please find other location.",
+                text: "Please enter a valid city name.",
             });
+            return; // Exit the function if there's an error
+        }
+
+        // Destructure the weather data
+        const {
+            name: country,
+            main: { temp, feels_like, humidity },
+            weather: [{ id, main }],
+            wind: { speed },
+        } = weatherData;
+
+        // Update the UI with valid weather data
+        yourlocation.textContent = country;
+        temperature.textContent = Math.round(temp) + "°C";
+        feel.textContent = Math.round(feels_like) + "°C";
+        wind.textContent = speed + " m/s";
+        humiditys.textContent = humidity;
+        condition.textContent = main;
+        weatherImg.src = `images/${getWeatherIcon(id)}`;
+
+        console.log("Weather data:", weatherData);
+    } catch (error) {
+        // Catch network or other unexpected errors
+        Swal.fire({
+            title: "Error!",
+            icon: "error",
+            text: "An error occurred while fetching the weather data. Please try again later.",
         });
+        console.error("Error fetching weather data:", error);
     }
 }
-// This script dynamically updates the weather data if required
-const weatherData = [
-    { day: "Monday", icon: "🌤", temp: "70° / 25°" },
-    { day: "Tuesday", icon: "⛅️", temp: "48° / 60°" },
-    { day: "Wednesday", icon: "☁️", temp: "55° / 38°" },
-    { day: "Thursday", icon: "🌥", temp: "25° / 40°" },
-    { day: "Friday", icon: "🌤", temp: "65° / 33°" },
-    { day: "Saturday", icon: "⛅️", temp: "34° / 27°" },
-    { day: "Sunday", icon: "☁️", temp: "29° / 55°" }
-  ];
-  
-  const weatherForecastContainer = document.querySelector('.weather-forecast');
-  
-  function updateWeather() {
-    const days = document.querySelectorAll('.day');
-    days.forEach((dayElement, index) => {
-      const { day, icon, temp } = weatherData[index];
-      dayElement.querySelector('.day-name').textContent = day;
-      dayElement.querySelector('.weather-icon').textContent = icon;
-      dayElement.querySelector('.temperature').textContent = temp;
-    });
-  }
-  
-  // Run when the page loads
-  updateWeather();
