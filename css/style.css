@@ -1,23 +1,189 @@
-/* signup */
-
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-body {
-    background-image: url('https://i.pinimg.com/736x/b4/0e/fd/b40efdcf5f50db7c65b4927d084822bb.jpg');
+.nav-item{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+form{
+    align-items: center;
+    justify-content: center;
+}
+.nav-item{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+form{
+    align-items: center;
+    justify-content: center;
+}
+.main-container{
+    margin: 80px 20px;
+    gap: 20px;
+}
+.left{
+    flex: 1;
+}
+.center{
+    flex: 0.7;
+    background-image: url('https://i.pinimg.com/736x/ea/0c/86/ea0c86ec46e104e022b8787c59a2949f.jpg');
     background-size: cover;
-    background-position: center;
-    font-family: "Popins", sans-serif;
-  }
-  .card {
-    background-color: #ffffff;
+    border-radius: 10px;
+}
+.right{
+    flex: 0.8;
+    background-color: blueviolet;
+}
+.weather{
+    background-color: rgb(47, 151, 254);
+    padding: 20px 20px 10px 20px;
+    border-radius: 20px;
+}
+.weather *{
+    color: white;
+}
+.weather-left{
+    flex: 0.7;
+}
+.location{
+    border-radius: 20px;
+    background-color: white;
+    align-items: center;
+    padding: 4px 10px;
+    width: 100%;
+}
+.your-location{
+    position: relative;
+    top: 8px;
+}
+.temperature{
+    font-size: 60px;
+}
+
+.weather-right{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: end;
+}
+.img-weather{
+    width: 150px;
+}
+.card-weather{
+    background-color: rgb(18, 154, 18);
+    padding: 10px 15px 0px 10px;
+    border-radius: 12px;
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+}
+.icon{
+    font-size: 40px;
+    position: relative;
+    top: 5px;
+
+}
+.img{
+    width: 30px;
+}
+.time{
+    padding:  5px;
+    background-color: rgb(47, 151, 254);
+    border-radius: 15px;
+}
+.time *{
+    color: white;
+}
+.hours{
+    padding:0 15px;
+    border-left: 1px solid rgba(249, 249, 249, 0.516);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.h3am{
     border: none;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('https://via.placeholder.com/800x600') no-repeat center center fixed;
+    background-size: cover;
+    
   }
-  .card p,
-  .card label {
-    color: #6c757d;
-  }
-
-
-
   
+  .weather-forecast {
+    max-width: 400px;
+    background-color: rgba(0, 0, 0, 0.448);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+  }
+  .weather-forecast *{
+    color: white;
+  }
+  
+  .weather-forecast h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .day {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .day:last-child {
+    border-bottom: none;
+  }
+  
+  .day-name {
+    font-size: 1.2em;
+    flex: 1;
+    
+  }
+  
+  .weather-icon {
+    font-size: 1.5em;
+    flex: 0.5;
+    text-align: center;
+  }
+  
+  .temp {
+    font-size: 1.2em;
+    flex: 1;
+    text-align: right;
+  }
+  .sun{
+    padding: 17px;
+    background-color: rgb(47, 151, 254);
+    border-radius: 15px;
+    color: white;
+}
+  .sun .sunrise {
+    font-size: 18px;
+    margin-right: 10px;
+    width: 50%;
+    display: flex;
+}
+.sun .sunrise img{
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+.sun .sunset {
+    font-size: 18px;
+    margin-right: 10px;
+    width: 50%;
+    display: flex;
+
+}
+.sun .sunset img{
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
