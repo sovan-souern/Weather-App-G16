@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form</title>
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/main.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js"></script>
+
+</head>
+<body class="bg-dark text-white">
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4 shadow-lg" style="width: 28rem; border-radius: 12px;">
+    <div class="card-body">
+      <h3 class="text-center">Sign in</h3>
+      <form id="login-form">
+        <div class="form-group mt-3">
+          <label for="username" class="form-label">User name</label>
+          <div class="input-group">
+            <input
+              type="text"
+              id="username"
+              class="form-control border-top-0 border-start-0 border-end-0"
+              placeholder="Enter your username"
+              required
+            />
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-group">
+            <input
+              type="email"
+              id="email"
+              class="form-control border-top-0 border-start-0 border-end-0"
+              placeholder="Enter your email"
+              required
+            />
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input
+              type="password"
+              id="password"
+              class="form-control border-top-0 border-start-0 border-end-0"
+              placeholder="Enter your password"
+              required
+            />
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          </div>
+        </div>
+        <div class="text-center mt-2">
+          <a href="#" class="text-primary">Forgot password?</a>
+        </div>
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary w-100">Log in</button>
+        </div>
+      </form>
+      <div class="text-center mt-3">
+        <small>Don't have an account? <a href="/page/form-signup.html" class="text-primary">Sign up</a></small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+  rel="stylesheet"
+/>
+<script type="module">
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "your-api-key",
+  authDomain: "your-auth-domain",
+  databaseURL: "your-database-url",
+  projectId: "your-project-id",
+  storageBucket: "your-storage-bucket",
+  messagingSenderId: "your-messaging-sender-id",
+  appId: "your-app-id"
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const database = firebase.database(app);
+
+document.getElementById('signup-form').addEventListener('submit', function (event) {
+  event.preventDefault(); // Prevent default form submission
+
+  const username = document.getElementById('username').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  // Create a new user object
+  const newUser = {
+    username: username,
+    email: email,
+    password: password
+  };
+
+  // Reference to Firebase Database
+  const usersRef = database.ref('users');
+
+  // Add new user data to Firebase
+  usersRef.push(newUser)
+    .then(() => {
+      alert("User registered successfully!");
+      // Optionally redirect to login page
+      window.location.href = '/page/form-login.html';
+    })
+    .catch((error) => {
+      alert("Error: " + error.message);
+    });
+});
+
+</script>
+</body>
+</html>
