@@ -175,3 +175,4 @@ async function updateWeatherInfo(city) {
         console.error("Error fetching weather data:", error);
     }
 }
+
