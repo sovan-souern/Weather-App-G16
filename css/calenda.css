@@ -1,0 +1,73 @@
+.nav-item{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+form{
+    align-items: center;
+    justify-content: center;
+}
+.nav-item{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.calendar-container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding:50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-header select,
+.calendar-header button {
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.day {
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    background-color: #fff;
+}
+
+.day h4 {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.day p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.weather-icon {
+    font-size: 24px;
+}
+
+.highlight {
+    background-color: #eef7ff;
+    border: 2px solid #007bff;
+}
+

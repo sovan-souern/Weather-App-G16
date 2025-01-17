@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Form</title>
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="../js/signup.js" defer></script>
+
+</head>
+<body class="bg-dark text-white">
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4 shadow-lg" style="width: 28rem; border-radius: 12px;">
+    <div class="card-body">
+      <h3 class="text-center">Sign up</h3>
+      <div class="text-center mb-3">
+        <button class="btn btn-light border w-100">
+          <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo" class="me-2">
+          Sign up with Google account
+        </button>
+      </div>
+      <div class="text-center text-secondary">or</div>
+      <form id="signup-form">
+        <div class="form-group mt-3">
+          <label for="username" class="form-label">User name</label>
+          <div class="input-group">
+            <input
+              type="text"
+              id="username"
+              class="form-control"
+              placeholder="Enter your username"
+              required
+            />
+              
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            placeholder="Enter your email"
+            required
+          />
+          
+        </div>
+        <div class="form-group mt-3">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control "
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+        <div class="form-group mt-3">
+          <label for="password" class="form-label">Confirm Password</label>
+          <input
+          type="password"
+          id="confirm-password"
+          class="form-control "
+          placeholder="Confirm Password"
+          required
+        />
+        
+        </div>
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary w-100">Sign up</button>
+        </div>
+      </form>
+      <div class="text-center mt-3">
+        <small>Already have an account? <a href="/page/login.html" class="text-primary">Sign in</a></small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAK5HL1rfkyAZWF4kCGwdcaUKmiAeN0zvc",
+    authDomain: "data-df079.firebaseapp.com",
+    databaseURL: "https://data-df079-default-rtdb.firebaseio.com",
+    projectId: "data-df079",
+    storageBucket: "data-df079.firebasestorage.app",
+    messagingSenderId: "19325321882",
+    appId: "1:19325321882:web:edd24908c458ab86e91523"
+  };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+document.getElementById("signup-form").addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent the form from refreshing the page
+
+  // Get user inputs
+  const username = document.getElementById("username").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirm-password").value;
+
+  // Check if passwords match
+  if (password !== confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  // Save data to Firebase
+  const usersRef = ref(database, "users"); 
+  const newUserRef = push(usersRef); 
+  set(newUserRef, {
+    username: username,
+    email: email,
+    password: password,
+    confirmPassword: confirmPassword,
+  })
+    .then(() => {
+      alert("Signup successful!");
+    })
+    .catch((error) => {
+      console.error("Error saving data:", error);
+      alert("Something went wrong. Please try again.");
+    });
+});
+
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+  rel="stylesheet"
+/>
+</body>
+</html>
