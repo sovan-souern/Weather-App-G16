@@ -1,0 +1,79 @@
+ .right{
+    background-color: rgb(250, 95, 121);
+    border-radius: 10px;
+    padding: 20px;
+    width: 25%;
+ }
+ 
+ .right h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.favorite-city {
+    margin: 15px 0;
+    padding: 20px;
+    border-radius: 15px;
+    background: #007bff;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.favorite-city h3 {
+    font-size: 30px;
+    margin: 0;
+    text-transform: capitalize;
+    color: white;
+}
+.favorite-city .temp {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+.favorite-city .conditions {
+    font-size: 1.2rem;
+    font-style: italic;
+}
+.favorite-city .info {
+    height: 70px;
+    display: flex;
+    justify-content: center;
+            /* margin-top: 15px; */
+}
+.info .card {
+    background: green;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+.info .card i {
+    margin-right: 8px;
+}
+.form-label {
+    color: #555;
+}
+.btn-primary {
+    display: block;
+    width: 100%;
+}
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+.delete-btn:hover {
+    color: red;
+}
