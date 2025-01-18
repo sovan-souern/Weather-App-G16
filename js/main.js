@@ -176,3 +176,74 @@ async function updateWeatherInfo(city) {
     }
 }
 
+
+
+
+// get time date and greating
+
+
+const timeElement1 = document.getElementById("time1");
+const dateElement1 = document.getElementById("date1");
+const greetingElement1 = document.getElementById("greeting1");
+
+function updateClock() {
+  const now = new Date();
+
+  // Time
+  let hours = now.getHours();
+  let minutes = now.getMinutes();
+  let seconds = now.getSeconds();
+  const isAM = hours < 12;
+
+  // Convert to 12-hour format
+  hours = hours % 12 || 12;
+
+  // Format hours, minutes, and seconds
+  hours = hours < 10 ? "0" + hours : hours;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+
+  // Update the time
+  timeElement1.textContent = `${hours}:${minutes} ${isAM ? "AM" : "PM"}`;
+
+  // Date
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const dayName = days[now.getDay()];
+  const date = now.getDate();
+  const monthName = months[now.getMonth()];
+  const year = now.getFullYear();
+
+  // Update the date
+  dateElement1.textContent = `${dayName}, ${date} ${monthName}, ${year}`;
+
+  // Greeting
+  let greeting;
+  if (isAM) {
+    greeting = "Good morning, Cambodia";
+  } else if (hours >= 6 && hours < 10) {
+    greeting = "Good evening, Cambodia";
+  } else {
+    greeting = "Good night, Cambodia";
+  }
+  
+  greetingElement1.innerHTML = `<span class="icon1">☀️</span> ${greeting}`;
+}
+
+// Update every second
+setInterval(updateClock, 1000);
+
+// Initial update
+updateClock();

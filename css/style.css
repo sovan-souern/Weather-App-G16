@@ -29,10 +29,7 @@ form{
     background-size: cover;
     border-radius: 10px;
 }
-.right{
-    flex: 0.8;
-    background-color: blueviolet;
-}
+
 .weather{
     background-color: rgb(47, 151, 254);
     padding: 20px 20px 10px 20px;
@@ -187,3 +184,40 @@ body {
     height: 50px;
     margin-right: 10px;
 }
+
+
+
+.right{
+    flex: 0.8;
+}
+
+  .clock-container1 {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .time1 {
+    font-size: 48px;
+    font-weight: bold;
+    color: #4285f4;
+  }
+  
+  .date1 {
+    font-size: 18px;
+    margin-top: 5px;
+    color: #666;
+  }
+  
+  .greeting {
+    font-size: 20px;
+    margin-top: 15px;
+    gap: 8px;
+  }
+  
+  .icon1 {
+    font-size: 24px;
+    color: #fbbc05;
+  }
+  
