@@ -200,7 +200,7 @@ button[type="submit"]:hover {
 .form-container button[type="submit"] {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    background: linear-gradient(135deg, #2575fc);
     color: white;
     border: none;
     border-radius: 8px;
@@ -210,7 +210,7 @@ button[type="submit"]:hover {
 }
 
 .form-container button[type="submit"]:hover {
-    background: linear-gradient(135deg, #2575fc, #6a11cb);
+    background: linear-gradient(135deg, #2575fc, black);
 }
 
 .form-container .close-btn {
@@ -257,6 +257,11 @@ button[type="submit"]:hover {
         margin: 10px;
     }
 }
+p{
+    text-align: center;
+}
+
+
 
 
 
