@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Redirect to your website upon successful login
        
-        location.href = '/home.html'; // Replace with your actual website URL
+        location.href = '../page/home.html'; // Replace with your actual website URL
     });
     const showSignupForm = document.getElementById('showSignupForm');
 
