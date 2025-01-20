@@ -8,7 +8,15 @@ body {
   height: 100vh;
   background-color: #f4f4f4;
 }
-
+.nav-item{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+form{
+  align-items: center;
+  justify-content: center;
+}
 .map-container {
   position: relative;
   width: 1000px;
