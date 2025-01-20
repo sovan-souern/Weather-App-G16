@@ -1,7 +1,7 @@
-const btn = document.querySelector('.btn')
-const search = document.querySelector('.form-control')
+const btn = document.querySelector('.btn');
+const search = document.querySelector('.form-control');
 const apiKey = '2f2a46aec436e07080c19fc46c4fc306';
-const yourlocation = document.querySelector('.your-location');
+const yourLocation = document.querySelector('.your-location');
 const day = document.querySelector('.today');
 const temperature = document.querySelector('.temperature');
 const feel = document.querySelector('#tep-feel');
@@ -9,241 +9,240 @@ const wind = document.querySelector('#wind');
 const humiditys = document.getElementById('humidity');
 const weatherImg = document.querySelector('.img-weather');
 const condition = document.querySelector('#condition');
-console.log(weatherImg);
+const sunrise = document.querySelector('#sunrise');
+const sunset = document.querySelector('#sunset');
+const temperatureTime = document.querySelectorAll('#temper');
+const timeImg = document.querySelectorAll('.img');
+const converter = document.querySelector('#converter');
 
-function getLocation() {
-    // Return a Promise that resolves with the latitude and longitude
-    return new Promise((resolve, reject) => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            resolve({ latitude, longitude }); // Resolve the Promise with the coordinates
-          },
-          (error) => {
-            reject(error); // Reject the Promise if there is an error
-          }
-        );
-      } else {
-        reject(new Error("Geolocation is not supported by this browser."));
-      }
-    });
+// Function to convert temperature based on selected unit
+function temConverter(temp) {
+  const tempValue = Math.round(temp);
+  if (converter.value === "°C") {
+    return `${tempValue}°C`;
+  } else if (converter.value === "°F") {
+    const ctof = Math.round((tempValue * 9) / 5 + 32);
+    return `${ctof}°F`;
   }
-async function getFetchDataUser(endPoint, latitude, longitude){
-    const apiUrl= `https://api.openweathermap.org/data/2.5/${endPoint}?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
-    const response = await fetch(apiUrl)
-    return response.json()
+  return tempValue;
 }
-getLocation()
-  .then(({ latitude, longitude }) => {
-    console.log("Latitude:", latitude, "Longitude:", longitude);
-    return getFetchDataUser("weather", latitude, longitude); // Call getFetchData with the coordinates
-  })
-  .then((data) => {
-    console.log("Weather data:", data); // Log the fetched weather data
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });
-  async function updateWeatherInfoUser(latitude, longitude){
-    const weatherData = await getFetchDataUser("weather", latitude, longitude)
-    const { 
-        name: country,
-        main: {temp, feels_like, humidity },
-        weather: [{ id, main }],
-        wind: {speed},
 
+// Function to get user's geolocation
+function getLocation() {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    } else {
+      reject(new Error("Geolocation is not supported by this browser."));
+    }
+  });
+}
+
+// Fetch weather data for a city
+async function getFetchDataCity(endPoint, city) {
+  const apiUrl = `https://api.openweathermap.org/data/2.5/${endPoint}?q=${city}&appid=${apiKey}&units=metric`;
+  const response = await fetch(apiUrl);
+  return response.json();
+}
+
+// Fetch weather data from OpenWeatherMap for user's geolocation
+async function getFetchData(endPoint, latitude, longitude) {
+  const apiUrl = `https://api.openweathermap.org/data/2.5/${endPoint}?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+  const response = await fetch(apiUrl);
+  return response.json();
+}
+
+// Update weather info based on latitude and longitude
+async function updateWeatherInfo(latitude, longitude) {
+  try {
+    const weatherData = await getFetchData("weather", latitude, longitude);
+    const {
+      name: country,
+      main: { temp, feels_like, humidity },
+      weather: [{ id, main }],
+      wind: { speed },
+      sys: { sunrise: sunriseUnix, sunset: sunsetUnix },
+      timezone,
     } = weatherData;
-    yourlocation.textContent = country;
-    temperature.textContent = Math.round(temp)+'°C';
-    feel.textContent = Math.round(feels_like)+'°C';
-    wind.textContent = speed+' m/s';
+
+    yourLocation.textContent = country;
+    temperature.innerHTML = temConverter(temp);
+    feel.innerHTML = temConverter(feels_like);
+    wind.textContent = `${speed} m/s`;
     humiditys.textContent = humidity;
     condition.textContent = main;
-    weatherImg.src = `images/${getWeatherIcon(id)}`;
+    weatherImg.src = `../images/${getWeatherIcon(id)}`;
 
-    console.log(weatherData)
-
-
-}
-async function main() {
-  try {
-    const { latitude, longitude } = await getLocation(); // Get the user's location
-    await updateWeatherInfoUser(latitude, longitude); // Update weather information
+    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+    sunrise.textContent = formatUnixTime(sunriseUnix, timezone, options);
+    sunset.textContent = formatUnixTime(sunsetUnix, timezone, options);
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error fetching weather data:", error);
   }
 }
 
-// Call the main function
-main();
-btn.addEventListener('click', () => {
-    if(search.value.trim()!= ''){
-        updateWeatherInfo(search.value)
-        search.value = ''
-        search.blur();
-    }
-});
-search.addEventListener('keydown', (event) => {
-    if(event.key == 'Enter' && search.value.trim() != ''
-){
-    updateWeatherInfo(search.value)
-    search.value = ''
-    search.blur();
+// Update weather forecast for the next 8 hours
+async function updateWeatherTime(latitude, longitude) {
+  try {
+    const weatherData = await getFetchData("forecast", latitude, longitude);
+    const data = weatherData.list;
+    data.forEach((time, index) => {
+      if (index < temperatureTime.length) {
+        temperatureTime[index].innerHTML = temConverter(time.main.temp);
+        timeImg[index].src = `../images/${getWeatherIcon(time.weather[0].id)}`;
+        timeImg[index].alt = time.weather[0].description;
+      }
+    });
+  } catch (error) {
+    console.error("Error updating weather info:", error.message);
+  }
 }
-});
-async function getFetchData(endPoint, city){
-    const apiUrl= `https://api.openweathermap.org/data/2.5/${endPoint}?q=${city}&appid=${apiKey}&units=metric`
-    const response = await fetch(apiUrl)
-    console.log(endPoint)
 
-    return response.json()
+// Convert UNIX timestamp to a readable time format
+function formatUnixTime(dtValue, offset, options) {
+  const date = new Date((dtValue + offset) * 1000);
+  return date.toLocaleString([], { timeZone: 'UTC', ...options });
 }
-function getWeatherIcon(id){
-    if (id <= 232) return 'thunderstorm.png'
-    if (id <= 321) return 'drizzle.png'
-    if (id <= 531) return 'rain.png'
-    if (id <= 622) return 'snow.png'
-    if (id <= 781) return 'atmosphere.png'
-    if (id <= 800) return 'clear.png'
-    else return 'cloud.png' 
+
+// Get weather icon based on the weather condition ID
+function getWeatherIcon(id) {
+  if (id <= 232) return 'thunderstorm.png';
+  if (id <= 321) return 'drizzle.png';
+  if (id <= 531) return 'rain.png';
+  if (id <= 622) return 'snow.png';
+  if (id <= 781) return 'atmosphere.png';
+  if (id === 800) return 'clear.png';
+  return 'cloud.png';
 }
+
+// Display the current date
 function showDate() {
-    const months = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
+  const months = [
+    "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
   ];
-
   let today = new Date();
-          let date = today.getDate();
-          let monthIndex= today.getMonth();
-          let year = today.getFullYear();
-          day.textContent = date + " " + months[monthIndex] + " " + year;
-}
-showDate()
-const date = new Date()
-async function updateWeatherInfo(city) {
-    try {
-        const weatherData = await getFetchData("weather", city);
-
-        // Check if the response contains an error
-        if (weatherData.cod != 200) {
-            Swal.fire({
-                title: "Location not found!",
-                icon: "error",
-                text: "Please enter a valid city name.",
-            });
-            return; // Exit the function if there's an error
-        }
-
-        // Destructure the weather data
-        const {
-            name: country,
-            main: { temp, feels_like, humidity },
-            weather: [{ id, main }],
-            wind: { speed },
-        } = weatherData;
-
-        // Update the UI with valid weather data
-        yourlocation.textContent = country;
-        temperature.textContent = Math.round(temp) + "°C";
-        feel.textContent = Math.round(feels_like) + "°C";
-        wind.textContent = speed + " m/s";
-        humiditys.textContent = humidity;
-        condition.textContent = main;
-        weatherImg.src = `images/${getWeatherIcon(id)}`;
-
-        console.log("Weather data:", weatherData);                                                        
-    } catch (error) {
-        // Catch network or other unexpected errors
-        Swal.fire({
-            title: "Error!",
-            icon: "error",
-            text: "An error occurred while fetching the weather data. Please try again later.",
-        });
-        console.error("Error fetching weather data:", error);
-    }
+  let date = today.getDate();
+  let monthIndex = today.getMonth();
+  let year = today.getFullYear();
+  day.textContent = `${date} ${months[monthIndex]} ${year}`;
 }
 
-
-
-
-// get time date and greating
-
-
-const timeElement1 = document.getElementById("time1");
-const dateElement1 = document.getElementById("date1");
-const greetingElement1 = document.getElementById("greeting1");
-
+// Update clock and greeting
 function updateClock() {
   const now = new Date();
-
-  // Time
   let hours = now.getHours();
   let minutes = now.getMinutes();
-  let seconds = now.getSeconds();
   const isAM = hours < 12;
-
-  // Convert to 12-hour format
   hours = hours % 12 || 12;
-
-  // Format hours, minutes, and seconds
   hours = hours < 10 ? "0" + hours : hours;
   minutes = minutes < 10 ? "0" + minutes : minutes;
 
-  // Update the time
-  timeElement1.textContent = `${hours}:${minutes} ${isAM ? "AM" : "PM"}`;
+  document.getElementById("time1").textContent = `${hours}:${minutes} ${isAM ? "AM" : "PM"}`;
 
-  // Date
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const dayName = days[now.getDay()];
   const date = now.getDate();
   const monthName = months[now.getMonth()];
   const year = now.getFullYear();
 
-  // Update the date
-  dateElement1.textContent = `${dayName}, ${date} ${monthName}, ${year}`;
+  document.getElementById("date1").textContent = `${dayName}, ${date} ${monthName}, ${year}`;
 
-  // Greeting
-  let greeting;
-  if (isAM) {
-    greeting = "Good morning, Cambodia";
-  } else if (hours >= 6 && hours < 10) {
-    greeting = "Good evening, Cambodia";
-  } else {
-    greeting = "Good night, Cambodia";
-  }
-  
-  greetingElement1.innerHTML = `<span class="icon1">☀️</span> ${greeting}`;
+  let greeting = isAM ? "Good morning, Cambodia" : (hours >= 6 && hours < 10) ? "Good evening, Cambodia" : "Good night, Cambodia";
+  document.getElementById("greeting1").innerHTML = `<span class="icon1">☀️</span> ${greeting}`;
 }
 
-// Update every second
+// Update weather info for a city
+async function updateWeatherInfoCity(city) {
+  try {
+    const weatherData = await getFetchDataCity("weather", city);
+    const {
+      name: country,
+      main: { temp, feels_like, humidity },
+      weather: [{ id, main }],
+      wind: { speed },
+      sys: { sunrise: sunriseUnix, sunset: sunsetUnix },
+      timezone,
+    } = weatherData;
+
+    yourLocation.textContent = country;
+    temperature.innerHTML = temConverter(temp);
+    feel.innerHTML = temConverter(feels_like);
+    wind.textContent = `${speed} m/s`;
+    humiditys.textContent = humidity;
+    condition.textContent = main;
+    weatherImg.src = `../images/${getWeatherIcon(id)}`;
+
+    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+    sunrise.textContent = formatUnixTime(sunriseUnix, timezone, options);
+    sunset.textContent = formatUnixTime(sunsetUnix, timezone, options);
+  } catch (error) {
+    console.error("Error fetching weather data:", error);
+  }
+}
+
+// Update weather forecast for the next 8 hours for a city
+async function updateWeatherTimeCity(city) {
+  try {
+    const weatherData = await getFetchDataCity("forecast", city);
+    const data = weatherData.list;
+    data.forEach((time, index) => {
+      if (index < temperatureTime.length) {
+        temperatureTime[index].innerHTML = temConverter(time.main.temp);
+        timeImg[index].src = `../images/${getWeatherIcon(time.weather[0].id)}`;
+        timeImg[index].alt = time.weather[0].description;
+      }
+    });
+  } catch (error) {
+    console.error("Error updating weather info:", error.message);
+  }
+}
+
+// Event listeners for city search and weather update
+btn.addEventListener('click', () => {
+  if (search.value.trim() !== '') {
+    updateWeatherInfoCity(search.value);
+    updateWeatherTimeCity(search.value);
+    search.value = '';
+    search.blur();
+  }
+});
+
+search.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' && search.value.trim() !== '') {
+    updateWeatherInfoCity(search.value);
+    updateWeatherTimeCity(search.value);
+    search.value = '';
+    search.blur();
+  }
+});
+
+converter.addEventListener('change', main); // Re-fetch weather info when temperature unit is changed
+
+// Initialize the app for user's location
+async function main() {
+  try {
+    const { latitude, longitude } = await getLocation();
+    await updateWeatherInfo(latitude, longitude);
+    await updateWeatherTime(latitude, longitude);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+// Update the time every second
 setInterval(updateClock, 1000);
 
-// Initial update
-updateClock();
+// Initialize the app
+main();
+showDate();
