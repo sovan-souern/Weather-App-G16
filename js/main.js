@@ -245,6 +245,7 @@ async function main() {
 setInterval(updateClock, 1000);
 
 // Initialize the app
+// function
 main();
 showDate();
 

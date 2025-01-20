@@ -1,21 +1,21 @@
-.nav-item{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-form{
-    align-items: center;
-    justify-content: center;
+body{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('https://via.placeholder.com/800x600') no-repeat center center fixed;
+    background-size: cover;
 }
 .nav-item{
     display: flex;
     align-items: center;
     gap: 10px;
+
 }
 form{
     align-items: center;
     justify-content: center;
 }
+
 .main-container{
     margin: 80px 20px;
     gap: 20px;
@@ -105,15 +105,9 @@ form{
 .h3am{
     border: none;
 }
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: url('https://via.placeholder.com/800x600') no-repeat center center fixed;
-    background-size: cover;
-    
-  }
-  
+
+
+
   .weather-forecast {
     max-width: 400px;
     background-color: rgba(0, 0, 0, 0.448);
@@ -148,6 +142,11 @@ body {
     
   }
   
+
+
+
+
+
   .weather-icon {
     font-size: 1.5em;
     flex: 0.5;
@@ -226,10 +225,7 @@ body {
   }
   
 
-
-
-
-  * {
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -237,6 +233,9 @@ body {
     text-decoration: none;
     list-style: none;
 }
+
+
+
 
 /* header */
 header {
@@ -259,16 +258,9 @@ header h2 {
     font-size: 2rem;
 }
 
-nav {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
 
-nav i {
-    margin-right: 15px; 
-    margin-top: 8px;
-}
+
+
 
 .btn-signin button {
     padding: 12px 30px;
