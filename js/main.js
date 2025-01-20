@@ -164,7 +164,7 @@ async function updateWeatherInfo(city) {
         condition.textContent = main;
         weatherImg.src = `images/${getWeatherIcon(id)}`;
 
-        console.log("Weather data:", weatherData);
+        console.log("Weather data:", weatherData);                                                        
     } catch (error) {
         // Catch network or other unexpected errors
         Swal.fire({
