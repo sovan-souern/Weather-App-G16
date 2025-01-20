@@ -162,6 +162,7 @@ function updateClock() {
   document.getElementById("greeting1").innerHTML = `<span class="icon1">☀️</span> ${greeting}`;
 }
 
+
 // Update weather info for a city
 async function updateWeatherInfoCity(city) {
   try {
@@ -247,3 +248,31 @@ setInterval(updateClock, 1000);
 // function
 main();
 showDate();
+
+// funtion to get weather at time specified
+function formatTime(hour) {
+  const period = hour >= 12 ? "PM" : "AM";
+  const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+  return `${formattedHour} ${period}`;
+}
+
+// Get the current time
+const currentTime = new Date();
+let currentHour = currentTime.getHours();
+
+// Array to hold the next times
+const times = [];
+
+// Loop to generate the next available times in 3-hour intervals, excluding current and next 3 hours
+for (let i = 0; i <= 7; i++) {
+  let futureHour = (currentHour + i * 3) % 24;  // Calculate the hour for the next time slot
+  times.push(formatTime(futureHour));  // Format the time and add it to the array
+}
+console.log(times); 
+const nextHour = document.querySelectorAll('#hour');
+console.log(nextHour);
+// Display the times in the list
+
+nextHour.forEach((time, index) => {
+  time.textContent = times[index];
+});

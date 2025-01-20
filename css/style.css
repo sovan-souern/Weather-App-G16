@@ -90,6 +90,10 @@ form{
 .time *{
     color: white;
 }
+#txt{
+    margin: 10px;
+    margin-left: 20px;
+}
 .hours{
     padding:0 15px;
     border-left: 1px solid rgba(249, 249, 249, 0.516);
