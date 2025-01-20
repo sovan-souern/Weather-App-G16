@@ -1,0 +1,129 @@
+.nav-item{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+form{
+    align-items: center;
+    justify-content: center;
+}
+.nav-item{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.calendar-container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding:50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-header select,
+.calendar-header button {
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.day {
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    background-color: #fff;
+}
+
+.day h4 {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.day p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.weather-icon {
+    font-size: 24px;
+}
+
+.highlight {
+    background-color: #eef7ff;
+    border: 2px solid #007bff;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.calendar-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.calendar-day .day-number {
+    font-weight: bold;
+    color: #333;
+}
+
+.calendar-day .weather-icon {
+    width: 50px;
+    height: 50px;
+    margin: 10px 0;
+}
+
+.calendar-day .temperature {
+    font-size: 14px;
+    color: #555;
+}
+
+.calendar-day .rainfall {
+    font-size: 12px;
+    color: #888;
+}
+
+@media (max-width: 768px) {
+    .calendar-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .calendar-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
