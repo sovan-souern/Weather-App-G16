@@ -51,6 +51,10 @@
           <!-- <a class="navbar-brand" href="#">Offcanvas dark navbar</a> -->
           <form class="d-flex form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2 me-2" type="search" placeholder="Search" aria-label="Search">
+            <select class="converter" id="converter">
+              <option>°C</option>
+              <option>°F</option>
+            </select>
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
@@ -92,56 +96,56 @@
               <div class="time-weather d-flex">
                 <div class="h3am hours">
                   <p>3 AM</p>
-                  <img class="img" src="images/image.png" alt="">
-                  <p>25°</p>
+                  <img class="img" src="../images/image.png" alt="">
+                  <p id="temper">25°</p>
                 </div>
                 <div class="h6am hours">
                   <p>6 AM</p>
-                  <img class="img" src="images/image.png" alt="">
-                  <p>25°</p>
+                  <img class="img" src="../images/image.png" alt="">
+                  <p id="temper">25°</p>
                 </div>
                 <div class="h9am hours">
                   <p>9 AM</p>
-                  <img class="img" src="images/image.png" alt="">
-                  <p>25°</p>
+                  <img class="img" src="../images/image.png" alt="">
+                  <p id="temper">25°</p>
                 </div>
                 <div class="h12pm hours">
                   <p>12 PM</p>
-                  <img class="img" src="images/image.png" alt="">
-                  <p>25°</p>
+                  <img class="img" src="../images/image.png" alt="">
+                  <p id="temper">25°</p>
                 </div>
                 <div class="h3pm hours">
                   <p>3 PM</p>
-                  <img class="img" src="images/image.png" alt="">
-                  <p>25°</p>
+                  <img class="img" src="../images/image.png" alt="">
+                  <p id="temper">25°</p>
                 </div>
                 <div class="h6pm hours">
                   <p>6 PM</p>
-                  <img class="img" src="images/image.png" alt="">
-                  <p>25°</p>
+                  <img class="img" src="../images/image.png" alt="">
+                  <p id="temper">25°</p>
                 </div>
                 <div class="h9pm hours">
                   <p>9 PM</p>
-                  <img class="img" src="images/image.png" alt="">
-                  <p>25°</p>
+                  <img class="img" src="../images/image.png" alt="">
+                  <p id="temper">25°</p>
                 </div>
                 <div class="h12am hours">
                   <p>12 AM</p>
-                  <img class="img" src="images/image.png" alt="">
-                  <p>25°</p>
+                  <img class="img" src="../images/image.png" alt="">
+                  <p id="temper">25°</p>
                 </div>
               </div>
             </div>
             <div class="sun">
-                <p>Sunrise and sunset</p>
+              <p>Sunrise and sunset</p>
                 <div class="sun-weather d-flex gap-3">
                   <div class="sunrise">
                     <img class="img" src="https://cdn-icons-png.flaticon.com/128/7774/7774377.png" alt="">
-                    <p>Sunrise <br>5:30 AM</p>
+                    <p>Sunrise <br><span id="sunrise"></span></p>
                   </div>
                   <div class="sunset">
                     <img class="img" src="https://cdn-icons-png.flaticon.com/128/10132/10132764.png" alt="">
-                    <p>Sunset<br>6:00 PM</p>
+                    <p>Sunset <br><span id="sunset"></span></p>
                   </div>
                 </div>
             </div>
