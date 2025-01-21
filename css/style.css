@@ -3,9 +3,21 @@
     align-items: center;
     gap: 10px;
 }
+#converter{
+    position: relative;
+    right: 20px;
+    outline: none;
+    border: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.236);
+    color: rgb(78, 140, 215);
+}
 form{
     align-items: center;
     justify-content: center;
+}
+.form-control{
+    position: relative;
+    left: 40px;
 }
 .nav-item{
     display: flex;
@@ -15,6 +27,7 @@ form{
 form{
     align-items: center;
     justify-content: center;
+    width: 500px;
 }
 .main-container{
     margin: 80px 20px;
