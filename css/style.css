@@ -46,6 +46,13 @@ form{
 .left{
     flex: 1;
 }
+#homeImg{
+    width: 100%;
+    height: 440px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 20px;
+}
 .center{
     flex: 0.7;
     background-image: url('https://i.pinimg.com/736x/ea/0c/86/ea0c86ec46e104e022b8787c59a2949f.jpg');
@@ -157,10 +164,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 0;
+    padding: 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
-  
   .day:last-child {
     border-bottom: none;
   }

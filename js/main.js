@@ -14,6 +14,10 @@ const sunset = document.querySelector('#sunset');
 const temperatureTime = document.querySelectorAll('#temper');
 const timeImg = document.querySelectorAll('.img');
 const converter = document.querySelector('#converter');
+const dayNames = document.querySelectorAll('.day-name');
+// const tempDays = document.querySelectorAll('.temp');
+const date = document.querySelectorAll('#date');
+console.log(dayNames)
 
 // Function to convert temperature based on selected unit
 function temConverter(temp) {
@@ -147,6 +151,7 @@ function updateClock() {
   const year = now.getFullYear();
 
   document.getElementById("date1").textContent = `${dayName}, ${date} ${monthName}, ${year}`;
+  day.textContent = `${dayName}, ${date} ${monthName}, ${year}`;
 
   // Determine greeting and icon based on the time of day
   let greeting;
@@ -246,6 +251,8 @@ async function main() {
     const { latitude, longitude } = await getLocation();
     await updateWeatherInfo(latitude, longitude);
     await updateWeatherTime(latitude, longitude);
+    await fetchWeather(latitude, longitude);
+
   } catch (error) {
     console.error("Error:", error);
   }
@@ -285,3 +292,96 @@ console.log(nextHour);
 nextHour.forEach((time, index) => {
   time.textContent = times[index];
 });
+
+// Update the weather forecast for the next 5 days
+const nextDay = [];
+const fullDates = [];
+console.log(nextDay)
+
+function displayDates() {
+  const dateList = document.getElementById("dateList");
+  const today = new Date();
+
+  for (let i = 0; i < 6; i++) {
+      let futureDate = new Date();
+      futureDate.setDate(today.getDate() + i);
+
+      // Extract day and full date separately
+      let day = futureDate.toLocaleDateString('en-US', { weekday: 'long' });
+      let fullDate = futureDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      nextDay.push(day);
+      fullDates.push(fullDate);
+  }
+}
+
+// Call the function when the page loads
+displayDates();
+
+dayNames.forEach((day, index) => {
+  day.textContent = nextDay[index];
+})
+
+date.forEach((date, index) => {
+  date.textContent = fullDates[index];
+})
+
+
+// const apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=11.5369379&lon=104.8987471&appid=2f2a46aec436e07080c19fc46c4fc306&units=metric';
+
+async function fetchWeather(latitude, longitude) {
+    try {
+        // const response = await fetch(apiUrl);
+        const data = await getFetchData("forecast", latitude, longitude);
+        
+        const dailyTemps = {};
+
+        data.list.forEach(item => {
+            const date = item.dt_txt.split(' ')[0]; // Extract date part
+            const tempMax = item.main.temp_max;
+            const tempMin = item.main.temp_min;
+            const iconCode = item.weather[0].icon;
+
+            if (!dailyTemps[date]) {
+                dailyTemps[date] = { max: tempMax, min: tempMin, icon: iconCode };
+            } else {
+                dailyTemps[date].max = Math.max(dailyTemps[date].max, tempMax);
+                dailyTemps[date].min = Math.min(dailyTemps[date].min, tempMin);
+            }
+        });
+
+        displayWeather(dailyTemps);
+    } catch (error) {
+        console.error('Error fetching weather data:', error);
+    }
+}
+
+const minMax = [];
+const icons = [];
+function displayWeather(dailyTemps) {
+    for (const [date, temps] of Object.entries(dailyTemps)) {
+        const weatherInfo = `${temConverter(temps.max.toFixed(1))} / ${temConverter(temps.min.toFixed(1))}`;
+        const icon = `https://openweathermap.org/img/wn/${temps.icon}@2x.png`;
+        minMax.push(weatherInfo);
+        icons.push(icon);
+    }
+
+    // Update the DOM after data is ready
+    const tempDays = document.querySelectorAll('.temp');
+    const iconWeather = document.querySelectorAll('.weather-icon');
+    tempDays.forEach((temp, index) => {
+        if (minMax[index]) {
+            temp.textContent = minMax[index];
+        }
+    });
+    iconWeather.forEach((iconContainer, index) => {
+        if (icons[index]) {
+            const iconImg = document.createElement('img');
+            iconImg.src = icons[index];
+            iconImg.style.width='45px'
+            iconContainer.appendChild(iconImg);
+        }
+    });
+}
+
+// fetchWeather(latitude, longitude);
