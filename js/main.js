@@ -126,24 +126,14 @@ function getWeatherIcon(id) {
 }
 
 // Display the current date
-function showDate() {
-  const months = [
-    "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-  ];
-  let today = new Date();
-  let date = today.getDate();
-  let monthIndex = today.getMonth();
-  let year = today.getFullYear();
-  day.textContent = `${date} ${months[monthIndex]} ${year}`;
-}
-
 // Update clock and greeting
 function updateClock() {
   const now = new Date();
   let hours = now.getHours();
   let minutes = now.getMinutes();
+
   const isAM = hours < 12;
-  hours = hours % 12 || 12;
+  hours = hours % 12 || 12; // Convert to 12-hour format
   hours = hours < 10 ? "0" + hours : hours;
   minutes = minutes < 10 ? "0" + minutes : minutes;
 
@@ -158,9 +148,29 @@ function updateClock() {
 
   document.getElementById("date1").textContent = `${dayName}, ${date} ${monthName}, ${year}`;
 
-  let greeting = isAM ? "Good morning, Cambodia" : (hours >= 6 && hours < 10) ? "Good evening, Cambodia" : "Good night, Cambodia";
-  document.getElementById("greeting1").innerHTML = `<span class="icon1">☀️</span> ${greeting}`;
+  // Determine greeting and icon based on the time of day
+  let greeting;
+  let icon;
+  const currentHour = now.getHours();
+
+  if (currentHour >= 5 && currentHour < 12) {
+    greeting = "Good morning, Cambodia";
+    icon = "🌅"; // Morning icon
+  } else if (currentHour >= 12 && currentHour < 17) {
+    greeting = "Good afternoon, Cambodia";
+    icon = "☀️"; // Afternoon icon
+  } else if (currentHour >= 17 && currentHour < 21) {
+    greeting = "Good evening, Cambodia";
+    icon = "🌇"; // Evening icon
+  } else {
+    greeting = "Good night, Cambodia";
+    icon = "🌙"; // Night icon
+  }
+
+  // Set greeting with icon
+  document.getElementById("greeting1").innerHTML = `<span class="icon1">${icon}</span> ${greeting}`;
 }
+
 
 
 // Update weather info for a city
