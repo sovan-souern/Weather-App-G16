@@ -27,7 +27,17 @@ form{
 form{
     align-items: center;
     justify-content: center;
-    width: 500px;
+    width: 850px;
+}
+#my-weather{
+    width: 310px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#current{
+    font-size: 20px;
 }
 .main-container{
     margin: 80px 20px;
