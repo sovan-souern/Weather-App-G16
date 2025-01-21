@@ -257,7 +257,6 @@ setInterval(updateClock, 1000);
 // Initialize the app
 // function
 main();
-showDate();
 
 // funtion to get weather at time specified
 function formatTime(hour) {
