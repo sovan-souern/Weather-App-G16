@@ -226,8 +226,6 @@ async function updateWeatherTimeCity(city) {
 
 // Event listeners for city search and weather update
 btn.addEventListener('click', () => {
-  console.log(1);
-  
   if (search.value.trim() !== '') {
     updateWeatherInfoCity(search.value);
     updateWeatherTimeCity(search.value);
