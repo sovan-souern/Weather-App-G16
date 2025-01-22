@@ -286,3 +286,4 @@ console.log(nextHour);
 nextHour.forEach((time, index) => {
   time.textContent = times[index];
 });
+
