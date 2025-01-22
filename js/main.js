@@ -1,4 +1,4 @@
-const btn = document.querySelector('.btn');
+const btn = document.querySelector('#search');
 const search = document.querySelector('.form-control');
 const apiKey = '2f2a46aec436e07080c19fc46c4fc306';
 const yourLocation = document.querySelector('.your-location');
@@ -226,9 +226,12 @@ async function updateWeatherTimeCity(city) {
 
 // Event listeners for city search and weather update
 btn.addEventListener('click', () => {
+  console.log(1);
+  
   if (search.value.trim() !== '') {
     updateWeatherInfoCity(search.value);
     updateWeatherTimeCity(search.value);
+    fetchWeatherCity(search.value);
     search.value = '';
     search.blur();
   }
@@ -238,12 +241,30 @@ search.addEventListener('keydown', (event) => {
   if (event.key === 'Enter' && search.value.trim() !== '') {
     updateWeatherInfoCity(search.value);
     updateWeatherTimeCity(search.value);
+    fetchWeatherCity(search.value);
     search.value = '';
     search.blur();
   }
 });
 
-converter.addEventListener('change', main); // Re-fetch weather info when temperature unit is changed
+converter.addEventListener('change', () => {
+  if (yourLocation.textContent.trim() !== '') {
+    updateWeatherInfoCity(yourLocation.textContent);
+    updateWeatherTimeCity(yourLocation.textContent);
+    fetchWeatherCity(yourLocation.textContent);
+    
+
+  } else {
+    getLocation()
+      .then(({ latitude, longitude }) => {
+        updateWeatherInfo(latitude, longitude);
+        updateWeatherTime(latitude, longitude);
+        fetchWeather(latitude, longitude);
+      })
+      .catch(error => console.error('Error:', error));
+  }
+});
+ // Re-fetch weather info when temperature unit is changed
 
 // Initialize the app for user's location
 async function main() {
@@ -356,6 +377,7 @@ async function fetchWeather(latitude, longitude) {
     }
 }
 
+
 const minMax = [];
 const icons = [];
 function displayWeather(dailyTemps) {
@@ -374,14 +396,84 @@ function displayWeather(dailyTemps) {
             temp.textContent = minMax[index];
         }
     });
-    iconWeather.forEach((iconContainer, index) => {
+    iconWeather.forEach((icon, index) => {
         if (icons[index]) {
-            const iconImg = document.createElement('img');
-            iconImg.src = icons[index];
-            iconImg.style.width='45px'
-            iconContainer.appendChild(iconImg);
+            icon.src = icons[index];
+            icon.style.width='35px'
         }
     });
 }
 
 // fetchWeather(latitude, longitude);
+// Function to fetch and display weather forecast for the next 5 days for a city
+async function fetchWeatherCity(city) {
+  try {
+    // Clear previous data before updating UI
+    document.querySelectorAll('.weather-icon img').forEach(img => img.remove());
+    minMax.length = 0;
+    icons.length = 0;
+
+    // Fetch weather data from OpenWeatherMap API
+    const data = await getFetchDataCity("forecast", city);
+
+    if (!data || !data.list) {
+      throw new Error("Invalid data received from API");
+    }
+
+    const dailyTemps = {};
+
+    // Process forecast data to get max/min temps for each day
+    data.list.forEach(item => {
+      if (item && item.main && item.weather && item.dt_txt) {
+        const date = item.dt_txt.split(' ')[0]; // Extract date part
+        const tempMax = item.main.temp_max;
+        const tempMin = item.main.temp_min;
+        const iconCode = item.weather[0].icon;
+
+        if (!dailyTemps[date]) {
+          dailyTemps[date] = { max: tempMax, min: tempMin, icon: iconCode };
+        } else {
+          dailyTemps[date].max = Math.max(dailyTemps[date].max, tempMax);
+          dailyTemps[date].min = Math.min(dailyTemps[date].min, tempMin);
+        }
+      }
+    });
+
+    displayWeather(dailyTemps);
+  } catch (error) {
+    console.error('Error fetching weather data:', error.message);
+    Swal.fire({
+      title: "This location is not found!",
+      icon: "error",
+      text: "Please find other location.",
+    });
+  }
+}
+
+// Function to update the UI with weather data
+function displayWeather(dailyTemps) {
+  for (const [date, temps] of Object.entries(dailyTemps)) {
+    const weatherInfo = `${temConverter(temps.max.toFixed(1))} / ${temConverter(temps.min.toFixed(1))}`;
+    const icon = `https://openweathermap.org/img/wn/${temps.icon}@2x.png`;
+    minMax.push(weatherInfo);
+    icons.push(icon);
+  }
+
+  // Update the DOM after data is ready
+  const tempDays = document.querySelectorAll('.temp');
+  const iconWeather = document.querySelectorAll('.weather-icon');
+
+  tempDays.forEach((temp, index) => {
+    if (minMax[index]) {
+      temp.textContent = minMax[index];
+    }
+  });
+
+  iconWeather.forEach((icon, index) => {
+    if (icons[index]) {
+      icon.src = icons[index];
+      icon.style.width = '35px';
+    }
+  });
+}
+
