@@ -6,6 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="../css/style.css">
     <script src="../js/main.js" defer ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script> -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">   
@@ -99,7 +100,7 @@
               <p id="txt">Time at:</p>
               <div class="time-weather d-flex">
                 <div class="h3am hours">
-                  <p id="hour">3 AM</p>
+                  <p id="hour" class="hour">3 AM</p>
                   <img class="img" src="../images/image.png" alt="">
                   <p id="temper">25°</p>
                 </div>
@@ -196,10 +197,115 @@
             <div class="greeting" id="greeting1">
               <span class="icon1">☀️</span> Loading greeting...
             </div>
+            <div class="temperature-label">Temperature Graph</div>
+            <div class="card-temperate">
+              <canvas id="temperatureChart"></canvas>
+            </div>
           </div>
-          <img src="../images/imghome.png" alt="" id="homeImg">
         </div>
-        
+        <script>
+         // Function to format the time
+  function formatTime(hour) {
+    const period = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${formattedHour} ${period}`;
+  }
+
+  // Generate the next 8 times in 3-hour intervals
+  function generateTimeLabels() {
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+    const times = [];
+
+    for (let i = 1; i <= 8; i++) { // Generate the next 8 time slots
+      let futureHour = (currentHour + i * 3) % 24;
+      times.push(formatTime(futureHour));
+    }
+
+    return times;
+  }
+
+  // Fetch weather data and update the chart
+  async function fetchWeatherDataAndUpdateChart() {
+    const apiKey = 'd32e7a65c1d759f27e5eeaef3ca69dfc'; // Replace with your API key
+    const city = 'Cambodia'; // Replace with your desired city
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`;
+
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+
+      const temperatures = data.list.slice(0, 8).map(item => item.main.temp);
+      const labels = generateTimeLabels();
+
+      updateChart(labels, temperatures);
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+    }
+  }
+
+  // Update Chart.js with new data
+  function updateChart(labels, temperatures) {
+    const data = {
+      labels: labels,
+      datasets: [{
+        label: "Temperature (°C)",
+        data: temperatures,
+        borderColor: "#fbc02d",
+        backgroundColor: "rgba(251, 192, 45, 0.5)",
+        tension: 0.3,
+        pointBackgroundColor: "#f57c00",
+        pointBorderColor: "#fff",
+        pointBorderWidth: 2,
+        fill: true
+      }]
+    };
+
+    const config = {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `Time: ${context.label}, Temperature: ${context.raw}°C`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Time'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Temperature (°C)'
+            },
+            suggestedMin: 0,
+            suggestedMax: 40
+          }
+        }
+      }
+    };
+
+    const ctx = document.getElementById('temperatureChart').getContext('2d');
+    new Chart(ctx, config);
+  }
+
+  // Fetch weather data and update the chart on page load
+  fetchWeatherDataAndUpdateChart();
+</script>
       </div>
+     
 </body>
 </html>
