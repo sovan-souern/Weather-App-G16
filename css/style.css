@@ -330,7 +330,27 @@ nav i {
     color: white;
     margin-right: 8px;
 }
-
+.suggestions {
+    display: none; /* Hide initially */
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ddd;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 20%;
+    z-index: 1000;
+    top: 60px;
+}
+  
+  .suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .suggestion-item:hover {
+    background-color: #f0f0f0;
+  }
+  
 @keyframes ripple-animation {
     from {
         transform: scale(0);
