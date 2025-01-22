@@ -14,6 +14,13 @@ form{
   align-items: center;
   justify-content: center;
 }
+.nav-item{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
 .calendar-container {
   max-width: 900px;
   margin: 20px auto;
