@@ -250,7 +250,7 @@ converter.addEventListener('change', () => {
     updateWeatherInfoCity(yourLocation.textContent);
     updateWeatherTimeCity(yourLocation.textContent);
     fetchWeatherCity(yourLocation.textContent);
-
+    
 
   } else {
     getLocation()
@@ -262,7 +262,7 @@ converter.addEventListener('change', () => {
       .catch(error => console.error('Error:', error));
   }
 });
-// Re-fetch weather info when temperature unit is changed
+ // Re-fetch weather info when temperature unit is changed
 
 // Initialize the app for user's location
 async function main() {
@@ -303,7 +303,7 @@ for (let i = 0; i <= 7; i++) {
   let futureHour = (currentHour + i * 3) % 24;  // Calculate the hour for the next time slot
   times.push(formatTime(futureHour));  // Format the time and add it to the array
 }
-console.log(times);
+console.log(times); 
 const nextHour = document.querySelectorAll('#hour');
 console.log(nextHour);
 // Display the times in the list
@@ -322,15 +322,15 @@ function displayDates() {
   const today = new Date();
 
   for (let i = 0; i < 6; i++) {
-    let futureDate = new Date();
-    futureDate.setDate(today.getDate() + i);
+      let futureDate = new Date();
+      futureDate.setDate(today.getDate() + i);
 
-    // Extract day and full date separately
-    let day = futureDate.toLocaleDateString('en-US', { weekday: 'long' });
-    let fullDate = futureDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      // Extract day and full date separately
+      let day = futureDate.toLocaleDateString('en-US', { weekday: 'long' });
+      let fullDate = futureDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    nextDay.push(day);
-    fullDates.push(fullDate);
+      nextDay.push(day);
+      fullDates.push(fullDate);
   }
 }
 
@@ -349,57 +349,57 @@ date.forEach((date, index) => {
 // const apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=11.5369379&lon=104.8987471&appid=2f2a46aec436e07080c19fc46c4fc306&units=metric';
 
 async function fetchWeather(latitude, longitude) {
-  try {
-    // const response = await fetch(apiUrl);
-    const data = await getFetchData("forecast", latitude, longitude);
+    try {
+        // const response = await fetch(apiUrl);
+        const data = await getFetchData("forecast", latitude, longitude);
+        
+        const dailyTemps = {};
 
-    const dailyTemps = {};
+        data.list.forEach(item => {
+            const date = item.dt_txt.split(' ')[0]; // Extract date part
+            const tempMax = item.main.temp_max;
+            const tempMin = item.main.temp_min;
+            const iconCode = item.weather[0].icon;
 
-    data.list.forEach(item => {
-      const date = item.dt_txt.split(' ')[0]; // Extract date part
-      const tempMax = item.main.temp_max;
-      const tempMin = item.main.temp_min;
-      const iconCode = item.weather[0].icon;
+            if (!dailyTemps[date]) {
+                dailyTemps[date] = { max: tempMax, min: tempMin, icon: iconCode };
+            } else {
+                dailyTemps[date].max = Math.max(dailyTemps[date].max, tempMax);
+                dailyTemps[date].min = Math.min(dailyTemps[date].min, tempMin);
+            }
+        });
 
-      if (!dailyTemps[date]) {
-        dailyTemps[date] = { max: tempMax, min: tempMin, icon: iconCode };
-      } else {
-        dailyTemps[date].max = Math.max(dailyTemps[date].max, tempMax);
-        dailyTemps[date].min = Math.min(dailyTemps[date].min, tempMin);
-      }
-    });
-
-    displayWeather(dailyTemps);
-  } catch (error) {
-    console.error('Error fetching weather data:', error);
-  }
+        displayWeather(dailyTemps);
+    } catch (error) {
+        console.error('Error fetching weather data:', error);
+    }
 }
 
 
 const minMax = [];
 const icons = [];
 function displayWeather(dailyTemps) {
-  for (const [date, temps] of Object.entries(dailyTemps)) {
-    const weatherInfo = `${temConverter(temps.max.toFixed(1))} / ${temConverter(temps.min.toFixed(1))}`;
-    const icon = `https://openweathermap.org/img/wn/${temps.icon}@2x.png`;
-    minMax.push(weatherInfo);
-    icons.push(icon);
-  }
+    for (const [date, temps] of Object.entries(dailyTemps)) {
+        const weatherInfo = `${temConverter(temps.max.toFixed(1))} / ${temConverter(temps.min.toFixed(1))}`;
+        const icon = `https://openweathermap.org/img/wn/${temps.icon}@2x.png`;
+        minMax.push(weatherInfo);
+        icons.push(icon);
+    }
 
-  // Update the DOM after data is ready
-  const tempDays = document.querySelectorAll('.temp');
-  const iconWeather = document.querySelectorAll('.weather-icon');
-  tempDays.forEach((temp, index) => {
-    if (minMax[index]) {
-      temp.textContent = minMax[index];
-    }
-  });
-  iconWeather.forEach((icon, index) => {
-    if (icons[index]) {
-      icon.src = icons[index];
-      icon.style.width = '35px'
-    }
-  });
+    // Update the DOM after data is ready
+    const tempDays = document.querySelectorAll('.temp');
+    const iconWeather = document.querySelectorAll('.weather-icon');
+    tempDays.forEach((temp, index) => {
+        if (minMax[index]) {
+            temp.textContent = minMax[index];
+        }
+    });
+    iconWeather.forEach((icon, index) => {
+        if (icons[index]) {
+            icon.src = icons[index];
+            icon.style.width='35px'
+        }
+    });
 }
 
 // fetchWeather(latitude, longitude);
@@ -475,57 +475,94 @@ function displayWeather(dailyTemps) {
   });
 }
 
-const locations = [
-  "Canada", "Cambodia", "Colombia", "China", "Czech Republic", "Chile", "Croatia",
-  "Cuba", "Cyprus", "Czechia", "Comoros", "Cape Verde", "Costa Rica", "Cayman Islands",
-  "Curacao", "Congo", "Congo (Democratic Republic)", "Cameroon", "Phnom Penh",
-  "Korea", "Thailand", "America", "Japan", "New York", "Los Angeles", "London", "Paris",
-  "Berlin", "Sydney", "Tokyo", "Seoul", "Mexico City", "Buenos Aires", "Cape Town", "Mumbai",
-  "Shanghai", "Moscow", "Rio de Janeiro", "Lagos", "Delhi", "Dubai", "Toronto", "Vancouver",
-  "Barcelona", "Madrid", "Rome", "Bangkok", "Beijing", "Berlin", "Kuala Lumpur", "Singapore",
-  "Manila", "Jakarta", "Cairo", "Ho Chi Minh City", "Lagos", "Chicago", "Buenos Aires",
-  "San Francisco", "Quezon City", "Osaka", "Chicago", "Santiago", "New Delhi", "Calcutta",
-  "Tehran", "Algiers", "Baghdad", "Lagos", "Wellington", "Kigali", "Ontario", "Quebec", "British Columbia",
-  "New South Wales", "Victoria", "Queensland", "Western Cape", "Gauteng", "California", "Florida",
-  "British Columbia", "Jalisco", "São Paulo", "Maharashtra", "Punjab", "Bengal", "Tamil Nadu",
-  "Lima", "Tanzania", "Luzon", "Bali", "West Java", "Puebla", "Jalisco", "Buenos Aires", "Munich",
-  "Hokkaido", "Navarre", "Andalusia", "Aragon", "Vancouver", "Nova Scotia", "Manitoba", "Guangdong",
-  "Henan", "Liaoning", "Hunan", "Shanghai", "Guangxi", "Yunnan", "Gansu",
-  "Battambang", "Banteay Meanchey", "Kampong Cham", "Kampong Chhnang", "Kampong Speu", "Kampong Thom",
-  "Kandal", "Kep", "Koh Kong", "Kratié", "Mondulkiri", "Phnom Penh", "Preah Vihear", "Prey Veng",
-  "Pursat", "Ratanakiri", "Siem Reap", "Sihanoukville", "Stung Treng", "Svay Rieng", "Takeo", "Tboung Khmum"
-];
+function formatTime(hour) {
+  const period = hour >= 12 ? "PM" : "AM";
+  const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+  return `${formattedHour} ${period}`;
+}
 
-// Show suggestions based on the input
-function showSuggestions(inputValue) {
-  const suggestions = document.querySelector('.suggestions');
-  suggestions.innerHTML = ''; // Clear previous suggestions
+// Generate fixed time labels starting from 7AM
+function generateTimeLabels() {
+  const fixedHours = [7, 10, 13, 16, 19, 22, 1, 4]; // 24-hour format
+  return fixedHours.map(hour => formatTime(hour));
+}
 
-  if (inputValue.trim() === '') {
-    suggestions.style.display = 'none';
-    return;
-  }
+// Fetch weather data and update the chart
+async function fetchWeatherDataAndUpdateChart() {
+  const apiKey = 'd32e7a65c1d759f27e5eeaef3ca69dfc'; // Replace with your API key
+  const city = 'Cambodia'; // Replace with your desired city
+  const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`;
 
-  const filteredLocations = locations.filter(location =>
-    location.toLowerCase().includes(inputValue.toLowerCase())
-  );
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
 
-  if (filteredLocations.length > 0) {
-    filteredLocations.forEach(location => {
-      const div = document.createElement('div');
-      div.textContent = location;
-      div.classList.add('suggestion-item');
-      div.addEventListener('click', () => {
-        search.value = location;
-        suggestions.style.display = 'none';
-      });
-      suggestions.appendChild(div);
-    });
-    suggestions.style.display = 'block';
-  } else {
-    suggestions.style.display = 'none';
+    const temperatures = data.list.slice(0, 8).map(item => item.main.temp);
+    const labels = generateTimeLabels();
+
+    updateChart(labels, temperatures);
+  } catch (error) {
+    console.error('Error fetching weather data:', error);
   }
 }
-search.addEventListener('input', () => {
-  showSuggestions(search.value);
-});
+
+// Update Chart.js with new data
+function updateChart(labels, temperatures) {
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: "Temperature (°C)",
+      data: temperatures,
+      borderColor: "#fbc02d",
+      backgroundColor: "rgba(251, 192, 45, 0.5)",
+      tension: 0.3,
+      pointBackgroundColor: "#f57c00",
+      pointBorderColor: "#fff",
+      pointBorderWidth: 2,
+      fill: true
+    }]
+  };
+
+  const config = {
+    type: 'line',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `Time: ${context.label}, Temperature: ${context.raw}°C`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Time'
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Temperature (°C)'
+          },
+          suggestedMin: 0,
+          suggestedMax: 40
+        }
+      }
+    }
+  };
+
+  const ctx = document.getElementById('temperatureChart').getContext('2d');
+  new Chart(ctx, config);
+}
+
+// Fetch weather data and update the chart on page load
+fetchWeatherDataAndUpdateChart();
