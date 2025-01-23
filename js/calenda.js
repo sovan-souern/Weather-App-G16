@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Add an event listener to the day div to display the date and temperature using SweetAlert
             dayDiv.addEventListener("click", () => {
-                displaySelectedDateInfo(day, month, year + 1, weather.main.temp);
+                displaySelectedDateInfo(day, month, year, weather.main.temp);
             });
 
             // Append the day div to the calendar container
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
             text: `Temperature: ${temConverter(temp)}`,
             icon: 'info',
             confirmButtonText: 'Ok'
-        });
+        });                         
     };
 
     // Add event listeners for dropdown changes
