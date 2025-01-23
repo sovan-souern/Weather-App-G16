@@ -529,4 +529,3 @@ function showSuggestions(inputValue) {
 search.addEventListener('input', () => {
   showSuggestions(search.value);
 });
-
