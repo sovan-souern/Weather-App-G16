@@ -1,178 +1,127 @@
-const calendar = document.querySelector('.calendar');
-const monthYear = document.getElementById('month-year');
-const prevButton = document.getElementById('prev');
-const nextButton = document.getElementById('next');
 
-let currentMonth = new Date().getMonth(); // Start with the current month
-let currentYear = new Date().getFullYear();
+document.addEventListener("DOMContentLoaded", function () {
+    const monthSelect = document.getElementById("month");
+    const yearSelect = document.getElementById("year");
+    const calendarContainer = document.getElementById("calendar");
+    const converter = document.getElementById("converter");
 
-const API_KEY = "d32e7a65c1d759f27e5eeaef3ca69dfc"; // Replace with your OpenWeatherMap API key
-const LOCATION = "Cambodia"; // Replace with your desired location
-
-// Update the month and year title
-function updateMonthYear() {
-  monthYear.textContent = `${new Date(currentYear, currentMonth).toLocaleString('en-US', { month: 'long' })} ${currentYear}`;
-}
-
-// Fetch weather data from API or localStorage
-async function fetchWeather() {
-  // Check if weather data is in localStorage
-  const cachedWeather = localStorage.getItem("weatherData");
-  const cachedTimestamp = localStorage.getItem("weatherTimestamp");
-
-  // Use cached data if it's less than 1 hour old
-  if (cachedWeather && cachedTimestamp) {
-    const age = (Date.now() - parseInt(cachedTimestamp)) / (1000 * 60 * 60);
-    if (age < 1) {
-      console.log("Using cached weather data.");
-      return JSON.parse(cachedWeather);
+    function temConverter(temp) {
+        const tempValue = Math.round(temp);
+        if (converter.value === "°C") {
+            return `${tempValue}°C`;
+        } else if (converter.value === "°F") {
+            const ctof = Math.round((tempValue * 9) / 5 + 32);
+            return `${ctof}°F`;
+        }
+        return tempValue;
     }
-  }
 
-  // Fetch new data if not cached or cache is expired
-  try {
-    console.log("Fetching new weather data...");
-    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${LOCATION}&appid=${API_KEY}&units=metric`;
-    const response = await fetch(url);
-    const data = await response.json();
+    // Fetch weather data for a city
+    const API_KEY = 'd32e7a65c1d759f27e5eeaef3ca69dfc'; // Replace with your OpenWeatherMap API key
+    const CITY = 'Cambodia'; // Replace with your city
+    const WEATHER_URL = `https://api.openweathermap.org/data/2.5/forecast?q=${CITY}&units=metric&cnt=30&appid=${API_KEY}`; // Use 'metric' for Celsius
 
-    const weatherData = data.list.map((entry) => ({
-      icon: `https://openweathermap.org/img/wn/${entry.weather[0].icon}.png`,
-      alt: entry.weather[0].description,
-      temp: `${Math.round(entry.main.temp_max)}°C | ${Math.round(entry.main.temp_min)}°C`,
-    }));
+    // Fetch weather data from the API
+    const fetchWeatherData = async () => {
+        try {
+            const response = await fetch(WEATHER_URL);
+            const data = await response.json();
+            return data.list; // Return the list of forecasts (adjust as needed)
+        } catch (error) {
+            console.error("Error fetching weather data:", error);
+        }
+    };
 
-    // Save new data to localStorage
-    localStorage.setItem("weatherData", JSON.stringify(weatherData));
-    localStorage.setItem("weatherTimestamp", Date.now().toString());
+    const displayCalendar = async () => {
+        const month = parseInt(monthSelect.value);
+        const year = parseInt(yearSelect.value);
 
-    return weatherData;
-  } catch (error) {
-    console.error("Error fetching weather data:", error);
-    return null; // Return null in case of error
-  }
-}
+        // Clear previous calendar content
+        calendarContainer.innerHTML = "";
 
-// Render the calendar
-async function renderCalendar() {
-  calendar.innerHTML = '';
-  updateMonthYear();
+        // Get the number of days in the selected month
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        // Fetch weather data
+        const weatherData = await fetchWeatherData();
 
-  const weatherData = await fetchWeather(); // Fetch weather data
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayDiv = document.createElement("div");
+            dayDiv.className = "calendar-day";
+            dayDiv.setAttribute('data-day', day); // Store the day in a data attribute
 
-  if (!weatherData) {
-    calendar.innerHTML = '<p>Unable to fetch weather data. Please try again later.</p>';
-    return;
-  }
+            const dayNumber = document.createElement("div");
+            dayNumber.className = "day-number";
+            dayNumber.textContent = day;
 
-  // Create empty cells for days before the first day of the month
-  for (let i = 0; i < firstDay; i++) {
-    const emptyCell = document.createElement('div');
-    emptyCell.classList.add('day');
-    calendar.appendChild(emptyCell);
-  }
+            // Get the weather data for the current day (adjust this based on your API's data structure)
+            const weather = weatherData[day % weatherData.length]; // Rotate through the forecast data
+            const weatherIcon = document.createElement("img");
+            weatherIcon.className = "weather-icon";
+            weatherIcon.src = `https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`;
+            weatherIcon.alt = weather.weather[0].description;
 
-  // Create day cells with weather data
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dayCell = document.createElement('div');
-    dayCell.classList.add('day');
+            const temperature = document.createElement("div");
+            temperature.className = "temperature";
+            temperature.textContent = `${weather.main.temp}°C`; // Display temperature in Celsius
 
-    // Rotate through weather data (or fetch by date if API provides exact date weather)
-    const weather = weatherData[day % weatherData.length];
+            const rainfall = document.createElement("div");
+            rainfall.className = "rainfall";
+            rainfall.textContent = `${weather.rain ? weather.rain['3h'] : '0'} mm`; // Display rainfall in mm
 
-    dayCell.innerHTML = `
-      <div>${day}</div>
-      <img src="${weather.icon}" alt="${weather.alt}">
-      <div class="temp-range">${weather.temp}</div>
-    `;
-    calendar.appendChild(dayCell);
-  }
-}
+            // Append elements to the day div
+            dayDiv.appendChild(dayNumber);
+            dayDiv.appendChild(weatherIcon);
+            dayDiv.appendChild(temperature);
+            dayDiv.appendChild(rainfall);
 
+            // Add an event listener to the day div to display the date and temperature using SweetAlert
+            dayDiv.addEventListener("click", () => {
+                displaySelectedDateInfo(day, month, year, weather.main.temp);
+            });
 
-// Update the details display using SweetAlert (without time)
-function updateDetails(day, weather) {
-  const selectedDate = new Date(currentYear, currentMonth, day);
-  const formattedDate = selectedDate.toLocaleString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+            // Append the day div to the calendar container
+            calendarContainer.appendChild(dayDiv);
+        }
+    };
 
-  Swal.fire({
-    title: 'Day Details',
-    html: `
-      <p><strong>Date:</strong> ${formattedDate}</p>
-      <p><strong>Temperature:</strong> ${weather.temp}</p>
-      <img src="${weather.icon}" alt="${weather.alt}" style="width:50px; margin-top: 10px;">
-    `,
-    icon: 'info',
-    confirmButtonText: 'Close',
-  });
-}
+    // Function to display selected date information using SweetAlert
+    const displaySelectedDateInfo = (day, month, year, temp) => {
+        // Convert the month number to a month name
+        const months = [
+            "January", "February", "March", "April", "May", "June", "July", 
+            "August", "September", "October", "November", "December"
+        ];
+        const monthName = months[month]; // Get the month name from the array
 
-// Render the calendar
-async function renderCalendar() {
-  calendar.innerHTML = '';
-  updateMonthYear();
+        // Show SweetAlert popup
+        Swal.fire({
+            title: `Selected Date: ${day} ${monthName} ${year}`,
+            text: `Temperature: ${temConverter(temp)}`,
+            icon: 'info',
+            confirmButtonText: 'Ok'
+        });                         
+    };
 
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    // Add event listeners for dropdown changes
+    monthSelect.addEventListener("change", displayCalendar);
+    yearSelect.addEventListener("change", displayCalendar);
 
-  const weatherData = await fetchWeather(); // Fetch weather data
+    // Populate the year dropdown dynamically
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear - 30;  // Starting from 30 years ago
+    const endYear = currentYear;  // Until the current year
 
-  if (!weatherData) {
-    calendar.innerHTML = '<p>Unable to fetch weather data. Please try again later.</p>';
-    return;
-  }
+    // Populate the year select element with options
+    for (let year = startYear; year <= endYear; year++) {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
 
-  // Create empty cells for days before the first day of the month
-  for (let i = 0; i < firstDay; i++) {
-    const emptyCell = document.createElement('div');
-    emptyCell.classList.add('day');
-    calendar.appendChild(emptyCell);
-  }
+    yearSelect.value = currentYear;  // Set current year as default
 
-  // Create day cells with weather data
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dayCell = document.createElement('div');
-    dayCell.classList.add('day');
-
-    // Rotate through weather data (or fetch by date if API provides exact date weather)
-    const weather = weatherData[day % weatherData.length];
-
-    dayCell.innerHTML = `
-      <div>${day}</div>
-      <img src="${weather.icon}" alt="${weather.alt}">
-      <div class="temp-range">${weather.temp}</div>
-    `;
-
-    // Add click event to display details
-    dayCell.addEventListener('click', () => {
-      updateDetails(day, weather);
-    });
-
-    calendar.appendChild(dayCell);
-  }
-}
-
-// Event listeners for navigating months
-prevButton.addEventListener('click', () => {
-  currentMonth = (currentMonth - 1 + 12) % 12;
-  if (currentMonth === 11) currentYear--;
-  renderCalendar();
+    // Initial render
+    displayCalendar();
 });
-
-nextButton.addEventListener('click', () => {
-  currentMonth = (currentMonth + 1) % 12;
-  if (currentMonth === 0) currentYear++;
-  renderCalendar();
-});
-
-// Initial render
-renderCalendar();
-
