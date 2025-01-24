@@ -8,11 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const imageElement = document.getElementById("changingImage");
 
-    // Set a fixed size for the image using JavaScript
-    imageElement.style.width = "500px"; 
-    imageElement.style.height = "300px"; 
-    imageElement.style.objectFit = "cover"; 
-
     images.forEach(src => {
         const img = new Image();
         img.src = src;
@@ -24,5 +19,3 @@ document.addEventListener("DOMContentLoaded", () => {
         imageElement.src = images[currentIndex];
     }, 3000);
 });
-
-

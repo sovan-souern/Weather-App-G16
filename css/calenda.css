@@ -137,19 +137,127 @@ form{
   color: #888;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .calendar-container {
+    width: 90%;
+    padding: 30px;
+    margin-top: 10%;
+  }
+
   .calendar-grid {
-      grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(5, 1fr); /* Reduce to 5 columns */
+  }
+
+  .calendar-day {
+    padding: 12px;
+  }
+
+  .calendar-day .day-number {
+    font-size: 15px;
+  }
+
+  .calendar-day .weather-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .calendar-day .temperature,
+  .calendar-day .rainfall {
+    font-size: 13px;
+  }
+}
+/* Base Grid Styling */
+
+
+/* Adjustments for Larger Screens (Tablets) */
+@media (max-width: 768px) {
+  .calendar-container {
+    width: 95%;
+    padding: 12px;
+  }
+
+  .calendar-day {
+    padding: 8px; /* Slightly larger padding on tablets */
+  }
+
+  .calendar-day .day-number {
+    font-size: 13px;
+  }
+
+  .calendar-day .weather-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .calendar-day .temperature,
+  .calendar-day .rainfall {
+    font-size: 11px;
   }
 }
 
+/* For Phones (max-width: 480px) */
 @media (max-width: 480px) {
   .calendar-grid {
-      grid-template-columns: 1fr;
+    grid-template-columns: repeat(5, 1fr); /* Ensure 5 columns */
+    gap: 5px; /* Smaller gap for compact layout */
   }
 
-  .calendar-header {
-      flex-direction: column;
-      gap: 10px;
+  .calendar-container {
+    padding: 10px;
+    margin-top: 30%; /* Smaller padding for mobile */
+  }
+
+  .calendar-day {
+    padding: 4px; /* Reduced padding */
+    border-radius: 3px; /* Slightly smaller border radius */
+  }
+
+  .calendar-day .day-number {
+    font-size: 11px; /* Smaller font size for day number */
+  }
+
+  .calendar-day .weather-icon {
+    width: 15px; /* Smaller icon size */
+    height: 15px;
+  }
+
+  .calendar-day .temperature,
+  .calendar-day .rainfall {
+    font-size: 9px; /* Smaller font sizes */
+  }
+
+  #my-weather {
+    display: none; /* Hide additional elements on small screens */
+  }
+}
+
+/* For Small Phones (max-width: 360px) */
+@media (max-width: 360px) {
+  .calendar-grid {
+    grid-template-columns: repeat(5, 1fr); /* Keep 5 columns */
+    gap: 4px; /* Further reduced gap */
+  }
+
+  .calendar-container {
+    padding: 8px;
+  
+  }
+
+  .calendar-day {
+    padding: 3px; /* Minimal padding for very small screens */
+  }
+
+  .calendar-day .day-number {
+    font-size: 10px;
+  }
+
+  .calendar-day .weather-icon {
+    width: 12px; /* Smaller icon size */
+    height: 12px;
+  }
+
+  .calendar-day .temperature,
+  .calendar-day .rainfall {
+    font-size: 8px; 
   }
 }
