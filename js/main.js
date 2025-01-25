@@ -240,6 +240,7 @@ search.addEventListener('keydown', (event) => {
     updateWeatherInfoCity(search.value);
     updateWeatherTimeCity(search.value);
     fetchWeatherCity(search.value);
+    fetchWeatherDataAndUpdateChartCity(search.value);
     search.value = '';
     search.blur();
   }
@@ -271,6 +272,7 @@ async function main() {
     await updateWeatherInfo(latitude, longitude);
     await updateWeatherTime(latitude, longitude);
     await fetchWeather(latitude, longitude);
+    await fetchWeatherDataAndUpdateChart(latitude, longitude);
 
   } catch (error) {
     console.error("Error:", error);
@@ -477,8 +479,8 @@ function displayWeather(dailyTemps) {
 
 const locations = [
   "Canada", "Cambodia", "Colombia", "China", "Czech Republic", "Chile", "Croatia",
-  "Cuba", "Cyprus", "Czechia", "Comoros", "Cape Verde", "Costa Rica", "Cayman Islands",
-  "Curacao", "Congo", "Congo (Democratic Republic)", "Cameroon", "Phnom Penh",
+  "Cuba", "Cyprus", "Czechia", "Comoros", "Costa Rica", "Cayman Islands",
+  "Curacao", "Congo", "Congo (Democratic Republic)", "Cameroon",
   "Korea", "Thailand", "America", "Japan", "New York", "Los Angeles", "London", "Paris",
   "Berlin", "Sydney", "Tokyo", "Seoul", "Mexico City", "Buenos Aires", "Cape Town", "Mumbai",
   "Shanghai", "Moscow", "Rio de Janeiro", "Lagos", "Delhi", "Dubai", "Toronto", "Vancouver",
@@ -551,14 +553,9 @@ function generateTimeLabels() {
 }
 
 // Fetch weather data and update the chart
-async function fetchWeatherDataAndUpdateChart() {
-  const apiKey = 'd32e7a65c1d759f27e5eeaef3ca69dfc'; // Replace with your API key
-  const city = 'Cambodia'; // Replace with your city
-  const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`;
-
+async function fetchWeatherDataAndUpdateChart(latitude, longitude) {
   try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
+    const data = await getFetchData("forecast", latitude, longitude);
 
     const temperatures = data.list.slice(0, 8).map(item => item.main.temp);
     const labels = generateTimeLabels();
@@ -569,7 +566,22 @@ async function fetchWeatherDataAndUpdateChart() {
   }
 }
 
-// Update Chart.js with new data
+let chartInstance;  // Store chart instance globally
+
+async function fetchWeatherDataAndUpdateChartCity(city) {
+  try {
+    const data = await getFetchDataCity("forecast", city);
+    
+    const temperatures = data.list.slice(0, 8).map(item => item.main.temp);
+    const labels = generateTimeLabels();
+    
+    updateChart(labels, temperatures);
+  } catch (error) {
+    console.error('Error fetching weather data:', error);
+  }
+}
+
+// Update Chart.js with new data or reinitialize if needed
 function updateChart(labels, temperatures) {
   const data = {
     labels: labels,
@@ -586,46 +598,55 @@ function updateChart(labels, temperatures) {
     }]
   };
 
-  const config = {
-    type: 'line',
-    data: data,
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return `Time: ${context.label}, Temperature: ${context.raw}°C`;
+  if (chartInstance) {
+    chartInstance.data = data;
+    chartInstance.update();  // Update existing chart
+  } else {
+    const ctx = document.getElementById('temperatureChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `Time: ${context.label}, Temperature: ${context.raw}°C`;
+              }
             }
           }
-        }
-      },
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Time'
-          }
         },
-        y: {
-          title: {
-            display: true,
-            text: 'Temperature (°C)'
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Time'
+            }
           },
-          suggestedMin: 0,
-          suggestedMax: 40
+          y: {
+            title: {
+              display: true,
+              text: 'Temperature (°C)'
+            },
+            suggestedMin: 0,
+            suggestedMax: 40
+          }
         }
       }
-    }
-  };
-
-  const ctx = document.getElementById('temperatureChart').getContext('2d');
-  new Chart(ctx, config);
+    });
+  }
 }
 
+// Call fetchWeatherDataAndUpdateChartCity when a search occurs
+document.getElementById('searchButton').addEventListener('click', () => {
+  const city = document.getElementById('cityInput').value;
+  fetchWeatherDataAndUpdateChartCity(city);
+});
+
+
 // Fetch weather data and update the chart on page load
-fetchWeatherDataAndUpdateChart();
