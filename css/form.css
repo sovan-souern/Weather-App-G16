@@ -242,13 +242,14 @@ button[type="submit"]:hover {
 /* Responsive Styles */
 @media (max-width: 768px) {
     .wrapper {
-        flex-direction: column;
+        /* flex-direction: column; */
         max-width: 90%;
     }
 
-    .image-section {
+    .image-section{
         width: 100%;
         padding: 20px;
+        display: none;
     }
 
     .form-section {
@@ -283,3 +284,8 @@ p{
 }
 
 
+@media (max-width: 324px) {
+    .image-section img{
+        display: none;
+    }
+}

@@ -5,33 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Start Page</title>
     <link rel="shortcut icon" href="/images/logoicon.png" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/firstpage.css">
     <script src="../js/first.js" defer></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <img src="https://i.pinimg.com/474x/77/0b/80/770b805d5c99c7931366c2e84e88f251.jpg" alt="Logo">
-        <h2>WEATHER</h2>
-        <nav>
-            <i class="bi bi-person-circle" style="color: rgb(80, 79, 79); font-size: 40px;"></i>
+    <header class="d-flex justify-content-between align-items-center px-4 py-3 bg-light border-bottom">
+        <div class="d-flex align-items-center">
+            <img src="https://i.pinimg.com/474x/77/0b/80/770b805d5c99c7931366c2e84e88f251.jpg" alt="Logo" class="me-2" style="height: 50px;">
+            <h2 class="mb-0">WEATHER</h2>
+        </div>
+        <nav class="d-flex align-items-center">
+            <i class="bi bi-person-circle me-3" style="color: rgb(80, 79, 79); font-size: 40px;"></i>
             <div class="btn-signin">
-                <a href="./page/form.html">
-                    <button>Sign In</button>
-                </a>
+                <a href="./page/form.html" class="btn btn-primary">Sign In</a>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="container text-center mt-5">
         <div class="content">
-            <h1>Let's Start! Something With Weather App</h1>
-            <img id="changingImage" src="https://i.pinimg.com/736x/b5/80/20/b58020fbdcc931fda6647bfb9384a372.jpg" alt="Background">
+            <h1 class="mb-4">Let's Start! Something With Weather App</h1>
+            <div class="d-flex justify-content-center">
+                <img id="changingImage" src="https://i.pinimg.com/736x/b5/80/20/b58020fbdcc931fda6647bfb9384a372.jpg" alt="Background" class="img-fluid rounded" style="width: 500px; height: 300px; object-fit: cover;">
+            </div>
         </div>
     </div>
-    <div class="btn-getstart">
-        <a href="./page/form.html">
-            <button>Get Started</button>
-        </a>
+
+    <div class="text-center mt-4">
+        <a href="./page/form.html" class="btn btn-success btn-lg">Get Started</a>
     </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Page</title>
+    <title>Form</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/form.css">
     <script src="../js/form.js" defer></script>
@@ -60,35 +60,5 @@
         <p>Have an account? <a href="../page/form.html">Log in</a></p>
     </div>
 
-    <script>
-        // Toggle password visibility for login form
-        // Toggle password visibility for login form
-        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
-        const loginPassword = document.getElementById('password');
-
-        toggleLoginPassword.addEventListener('click', () => {
-            if (loginPassword.type === 'password') {
-                loginPassword.type = 'text';
-                toggleLoginPassword.classList.replace('bi-eye-slash', 'bi-eye');
-            } else {
-                loginPassword.type = 'password';
-                toggleLoginPassword.classList.replace('bi-eye', 'bi-eye-slash');
-            }
-        });
-
-
-        // Toggle password visibility for signup form
-        const toggleSignupPassword = document.getElementById('toggleSignupPassword');
-        const signupPassword = document.getElementById('signupPassword');
-        toggleSignupPassword.addEventListener('click', () => {
-            if (signupPassword.type === 'password') {
-                signupPassword.type = 'text';
-                toggleSignupPassword.classList.replace('bi-eye-slash', 'bi-eye');
-            } else {
-                signupPassword.type = 'password';
-                toggleSignupPassword.classList.replace('bi-eye', 'bi-eye-slash');
-            }
-        });
-    </script>
 </body>
 </html>
