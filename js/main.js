@@ -506,6 +506,45 @@ async function fetchWeatherDataAndUpdateChart() {
   }
 }
 
+function formatTime(hour) {
+  const period = hour >= 12 ? "PM" : "AM";
+  const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+  return `${formattedHour} ${period}`;
+}
+
+// Generate the next 8 times in 3-hour intervals
+function generateTimeLabels() {
+  const currentTime = new Date();
+  const currentHour = currentTime.getHours();
+  const times = [];
+
+  for (let i = 1; i <= 8; i++) { // Generate the next 8 time slots
+    let futureHour = (currentHour + i * 3) % 24;
+    times.push(formatTime(futureHour));
+  }
+
+  return times;
+}
+
+// Fetch weather data and update the chart
+async function fetchWeatherDataAndUpdateChart() {
+  const apiKey = 'd32e7a65c1d759f27e5eeaef3ca69dfc'; // Replace with your API key
+  const city = 'Korea'; // Replace with your city
+  const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    const temperatures = data.list.slice(0, 8).map(item => item.main.temp);
+    const labels = generateTimeLabels();
+
+    updateChart(labels, temperatures);
+  } catch (error) {
+    console.error('Error fetching weather data:', error);
+  }
+}
+
 // Update Chart.js with new data
 function updateChart(labels, temperatures) {
   const data = {

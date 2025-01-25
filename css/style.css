@@ -414,6 +414,15 @@ nav i {
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     color: black;
 }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  canvas {
+    max-width: 1200px;
+    height: 600px !important;
+    margin: 0 auto;
+  }
 
 .btn-getstart button::after {
     content: ' ➔'; 
