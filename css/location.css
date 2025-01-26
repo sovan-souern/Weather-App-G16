@@ -23,15 +23,18 @@
   form{
     align-items: center;
     justify-content: center;
-    width: 850px;
-  }
-  #my-weather{
-    width: 310px;
+    width: 800px;
+}
+#my-weather{
+    width: 240px;
     margin-left: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+    border: none;
+    gap: 10px;
+
+}
   #current{
     font-size: 20px;
   }
