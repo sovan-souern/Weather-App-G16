@@ -1,4 +1,5 @@
-const btn = document.querySelector('#search');
+const btn = document.getElementById('searchButton');
+// const currentWeather = document.getElementById('current-weather');
 const search = document.querySelector('.form-control');
 const apiKey = '2f2a46aec436e07080c19fc46c4fc306';
 const yourLocation = document.querySelector('.your-location');
@@ -225,26 +226,99 @@ async function updateWeatherTimeCity(city) {
 }
 
 // Event listeners for city search and weather update
-btn.addEventListener('click', () => {
-  if (search.value.trim() !== '') {
-    updateWeatherInfoCity(search.value);
-    updateWeatherTimeCity(search.value);
-    fetchWeatherCity(search.value);
-    search.value = '';
-    search.blur();
-  }
-});
+// Function to update weather info when a city is searched
+// Function to handle weather search for a city
+async function searchCityWeather(city) {
+  console.log("Saving city to localStorage:", city); // Debugging
+  localStorage.setItem('lastSearchedCity', city);  // Save city to local storage
 
-search.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter' && search.value.trim() !== '') {
-    updateWeatherInfoCity(search.value);
-    updateWeatherTimeCity(search.value);
-    fetchWeatherCity(search.value);
-    fetchWeatherDataAndUpdateChartCity(search.value);
-    search.value = '';
-    search.blur();
+  try {
+    await updateWeatherInfoCity(city);
+    await updateWeatherTimeCity(city);
+    await fetchWeatherCity(city);
+    await fetchWeatherDataAndUpdateChartCity(city);
+  } catch (error) {
+    console.error("Error fetching weather data:", error);
   }
-});
+
+  search.value = '';
+  search.blur();
+}
+
+// Event listener for search button click
+// const btn = document.querySelector('#search-btn');  // Assuming the button has this id
+// const search = document.querySelector('#search-input');  // Assuming the input has this id
+
+if (btn && search) {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (search.value.trim() !== '') {
+      searchCityWeather(search.value.trim());
+    }
+  });
+
+  // Event listener for pressing "Enter" key in the search input
+  search.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && search.value.trim() !== '') {
+      searchCityWeather(search.value.trim());
+    }
+  });
+}
+
+// Function to load weather data on page load
+async function loadWeatherOnPageLoad() {
+  const savedCity = localStorage.getItem('lastSearchedCity');
+  console.log("Retrieved city from localStorage:", savedCity); // Debugging
+
+  if (savedCity && savedCity.trim() !== '') {
+    // If a city was previously searched, load its weather
+    console.log("Loading saved city:", savedCity);
+    try {
+      await updateWeatherInfoCity(savedCity);
+      await updateWeatherTimeCity(savedCity);
+      await fetchWeatherCity(savedCity);
+      await fetchWeatherDataAndUpdateChartCity(savedCity);
+    } catch (error) {
+      console.error("Error fetching weather data for saved city:", error);
+    }
+  } else {
+    // If no saved city, get user's current location
+    try {
+      console.log("No saved city, fetching user's location...");
+      const { latitude, longitude } = await getLocation();
+      console.log("User's location:", latitude, longitude);
+      await updateWeatherInfo(latitude, longitude);
+      await updateWeatherTime(latitude, longitude);
+      await fetchWeather(latitude, longitude);
+      await fetchWeatherDataAndUpdateChart(latitude, longitude);
+    } catch (error) {
+      console.error("Error fetching location:", error);
+    }
+  }
+}
+
+// Event listener to reset saved city when current weather is clicked
+const currentWeather = document.querySelector('#my-weather');  // Assuming the element has this id
+console.log(currentWeather)
+
+if (currentWeather) {
+  console.log('currentWeather element found'); // Debugging
+
+  currentWeather.addEventListener('click', () => {
+    console.log("Current weather clicked, resetting saved city.");
+    localStorage.removeItem('lastSearchedCity');  // Remove city from localStorage
+    console.log('City removed from localStorage');
+    
+    // Optionally, you can reset the UI or other variables if needed
+    savedCity = null;  // Reset savedCity variable (if it's defined elsewhere)
+  });
+} else {
+  console.log('currentWeather element not found'); // Debugging
+}
+
+// Initialize the app when the page loads
+window.addEventListener('load', loadWeatherOnPageLoad);
+
 
 converter.addEventListener('change', () => {
   if (yourLocation.textContent.trim() !== '') {
@@ -643,10 +717,9 @@ function updateChart(labels, temperatures) {
 }
 
 // Call fetchWeatherDataAndUpdateChartCity when a search occurs
-document.getElementById('searchButton').addEventListener('click', () => {
-  const city = document.getElementById('cityInput').value;
-  fetchWeatherDataAndUpdateChartCity(city);
-});
-
 
 // Fetch weather data and update the chart on page load
+// Function to update weather info when a city is searched
+// Function to update weather info when a city is searched
+
+
