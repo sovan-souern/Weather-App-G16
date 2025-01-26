@@ -296,17 +296,6 @@ header h2 {
     font-size: 2rem;
 }
 
-/* nav {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
-
-nav i {
-    margin-right: 15px; 
-    margin-top: 8px;
-} */
-
 .btn-signin button {
     padding: 12px 30px;
     background-color: rgb(47, 151, 254);
@@ -461,7 +450,14 @@ nav i {
 
 
   @media only screen and (max-width: 768px) {
+    /* .navbar{
+      height: 60px;
+    } */
     /* Header */
+    .main-container{
+      margin: 0;
+      gap: 20px;
+    }
     header {
       flex-direction: column;
       align-items: center;
@@ -489,7 +485,21 @@ nav i {
     .weather{
         margin-top: 29%;
       }
-  
+    form{
+        width: 360px;
+    }
+    #searchButton{
+      display: none;
+    }
+    #my-weather{
+      position: relative;
+      bottom: 10px;
+      width: 40px;
+      margin-left: 0;
+    }
+    #loc{
+      display: none;
+    }
     /* Content */
     .content {
       flex-direction: column;
@@ -589,7 +599,8 @@ nav i {
       gap: 10px;
     }
     #my-weather{
-        display: none;
+      position: relative;
+      top: 20px;
     }
     .right .date1{
         text-align: center;
@@ -615,8 +626,23 @@ nav i {
   
 
   
-  @media only screen and (max-width: 1024px) {
+  @media (min-width: 769px) and (max-width: 1024px) {
     /* Header */
+    form{
+      width: 360px;
+    }
+    #searchButton{
+      display: none;
+    }
+    #my-weather{
+      position: relative;
+      bottom: 10px;
+      width: 40px;
+      margin-left: 0;
+    }
+    #loc{
+      display: none;
+    }
     header {
       /* flex-direction: column; */
       align-items: center;
@@ -644,7 +670,9 @@ nav i {
     .weather{
         margin-top: 29%;
       }
-  
+    #loc{
+      display: none;
+    }
     /* Content */
     .content {
       /* flex-direction: column; */
