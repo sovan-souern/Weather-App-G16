@@ -604,5 +604,170 @@ nav i {
         font-size: 40px;
         text-align: center;
     }
+    .weather-forecast {
+      padding: 15px;
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      gap: 10px;
+      margin: 10px auto;
+    }
   }
+  
+
+  
+  @media only screen and (max-width: 1024px) {
+    /* Header */
+    header {
+      /* flex-direction: column; */
+      align-items: center;
+      gap: 10px; 
+    }
+  
+    header img {
+      width: 50px;
+      height: 50px;
+    }
+    .time{
+        display: none;
+  
+    }
+    header h2 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+  
+    .btn-signin button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+    }
+    .weather{
+        margin-top: 29%;
+      }
+  
+    /* Content */
+    .content {
+      /* flex-direction: column; */
+      padding: 15px;
+      gap: 20px;
+    }
+  
+    .content h1 {
+      font-size: 2rem;
+      text-align: center;
+    }
+  
+    #changingImage {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+  
+    .btn-getstart button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+    }
+  
+    /* Weather Section */
+    .weather {
+      /* flex-direction: column; */
+      padding: 15px;
+      gap: 10px;
+    }
+  
+    .temperature {
+      font-size: 50px;
+    }
+    .my-3{
+        margin-top: 10px;
+        font-size: 40px;
+    }
+    .today {
+        margin-top: 10px;
+        font-size: 20px;
+    }
+  
+    .weather-right {
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .feel{
+        font-size: 20px;
+        margin-top: 10px;
+    }
+  
+    .card-weather {
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+    .humidity, .wind {
+      font-size: 20px;
+    }
+    .card-weather{
+        height: auto;
+        width: 150px;
+        padding: 10px;
+  
+    }
+  
+    .sun .sunrise, .sun .sunset {
+      /* flex-direction: column; */
+      align-items: center;
+      text-align: center;
+    }
+  
+    /* General Layout Adjustments */
+    .main-container {
+      flex-direction: column;
+      margin: 20px 10px;
+      gap: 20px;
+    }
+  
+    .clock-container1 {
+      height: auto;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+  
+  
+
+  
+    /* Weather Forecast */
+    .weather-forecast {
+      /* flex-direction: column; */
+      padding: 15px;
+      gap: 10px;
+    }
+
+    .right .date1{
+        /* text-align: center; */
+        font-size: 16px;
+    }
+    .temperature-label{
+        font-size: 2rem;
+        margin-top: 10px;
+    }
+    .time1{
+        font-size: 40px;
+    }
+      .weather-forecast {
+      padding: 15px;
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      gap: 10px;
+      margin: 10px auto;
+      width: 100%;
+    }
+
+    canvas {
+      max-width: 800px;
+      height: 500px !important;
+      margin: 0 auto;
+    }
+
+  }
+  
+
   
