@@ -141,7 +141,12 @@
     display: block; /* Ensure it's displayed */
     position: relative; /* Ensure it's properly positioned */
   }
-
+  #loc{
+    display: none;
+  }
+  #my-weather{
+    width: 40px;
+  }
   .calendar-container {
     width: 100%;
     padding: 20px;
@@ -174,7 +179,9 @@
     width: 100%;
     padding: 10px;
   }
-
+  form{
+    width: 320px;
+  }
   .map-container {
     width: 100%; /* Ensure the map container takes full width */
     height: 300px; /* Set a height for the map */

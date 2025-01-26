@@ -7,10 +7,6 @@
   border-left: 1px solid rgba(0, 0, 0, 0.236);
   color: rgb(78, 140, 215);
 }
-form{
-  align-items: center;
-  justify-content: center;
-}
 .form-control{
   position: relative;
   left: 40px;
@@ -168,6 +164,12 @@ form{
   .calendar-day .rainfall {
     font-size: 13px;
   }
+  form{
+    width: 700px;
+  }
+  #my-weather{
+    display: none;
+  }
 }
 /* Base Grid Styling */
 
@@ -196,6 +198,13 @@ form{
   .calendar-day .rainfall {
     font-size: 11px;
   }
+  form{
+    width: 300px;
+  }
+  #my-weather{
+    display: none;
+  }
+  
 }
 
 /* For Phones (max-width: 480px) */
